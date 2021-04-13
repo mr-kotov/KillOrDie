@@ -62,13 +62,27 @@ bool AKODBaseCharacter::IsRunning() const {
   return IsMovingForward && WantsToRun && !GetVelocity().IsZero();
 }
 
+float AKODBaseCharacter::GetMovementDirection() const {
+  if(GetVelocity().IsZero()) return 0.0f;
+  //получаем нормаль нашего вектора скорости
+  const auto VelocityNormal = GetVelocity().GetSafeNormal();
+  //высчитываем скаларное произведение вектора направления и вектора нормали, берем Acos от данного скалярного произв и получаем угол между векторами
+  const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+  //получаем ортогональный вектор
+  const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+  //преобразуем радианы в градусы
+  const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
+  return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z); //домножаем на знак координаты Z
+}
 
 void AKODBaseCharacter::MoveForward(float Amount) {
-  AddMovementInput(GetActorForwardVector(), Amount);
   IsMovingForward = Amount > 0.0f;
+  if(Amount == 0.0f) return;
+  AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void AKODBaseCharacter::MoveRight(float Amount) {
+  if(Amount == 0.0f) return;
   AddMovementInput(GetActorRightVector(), Amount);
 }
 
