@@ -9,6 +9,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UKODHealthComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class KILLORDIE_API AKODBaseCharacter : public ACharacter {
@@ -27,6 +29,12 @@ protected:
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   USpringArmComponent* SpringArmComponent;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+  UKODHealthComponent* HealthComponent;
+  
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+  UTextRenderComponent* HealthTextComponent;
   
   virtual void BeginPlay() override;
   

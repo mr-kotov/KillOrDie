@@ -5,8 +5,9 @@
 #include "Characters/Components/KODCharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Characters/Components/KODHealthComponent.h"
+#include "Components/TextRenderComponent.h"
 
-// Sets default values
 //SetDefaultSubobjectClass шаблонная функция принимает в качестве параметра шаблон класса подобъекта которым мы хотим заменить, в данном сулчае UKODCharacterMovementComponent
 //в качестве параметра принимается наименование компонента 
 AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
@@ -24,18 +25,27 @@ AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
   CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
   CameraComponent->SetupAttachment(SpringArmComponent);
 
+  HealthComponent = CreateDefaultSubobject<UKODHealthComponent>("HealthComponent");
+  
+  HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
+  HealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AKODBaseCharacter::BeginPlay() {
   Super::BeginPlay();
-
+  //проверяем создание данных компонентов, работает только в сборках дебага, в релиз не идет
+  
+  check(HealthComponent);
+  check(HealthTextComponent);
 }
 
 // Called every frame
 void AKODBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
+  const auto Health = HealthComponent->GetHealth();
+  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
