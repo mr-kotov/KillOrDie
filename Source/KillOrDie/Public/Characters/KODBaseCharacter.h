@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Character.h"
 #include "KODBaseCharacter.generated.h"
 
@@ -36,7 +35,11 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   UTextRenderComponent* HealthTextComponent;
   
+  UPROPERTY(EditDefaultsOnly, Category="Animations")
+  UAnimMontage* DeathAnimMontage;
+  
   virtual void BeginPlay() override;
+  
   
 public:
   // Called every frame
@@ -63,4 +66,7 @@ private:
   void TurnAround(float Amount);
   void OnStartRunning();
   void OnStopRunning();
+
+  void OnDeath();
+  void OnHealthChanged(float Health);
 };

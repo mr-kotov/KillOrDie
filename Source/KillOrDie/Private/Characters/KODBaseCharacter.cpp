@@ -8,6 +8,8 @@
 #include "Characters/Components/KODHealthComponent.h"
 #include "Components/TextRenderComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
+
 //SetDefaultSubobjectClass шаблонная функция принимает в качестве параметра шаблон класса подобъекта которым мы хотим заменить, в данном сулчае UKODCharacterMovementComponent
 //в качестве параметра принимается наименование компонента 
 AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
@@ -35,17 +37,20 @@ AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
 void AKODBaseCharacter::BeginPlay() {
   Super::BeginPlay();
   //проверяем создание данных компонентов, работает только в сборках дебага, в релиз не идет
-  
   check(HealthComponent);
   check(HealthTextComponent);
+  check(GetCharacterMovement());
+
+  OnHealthChanged(HealthComponent->GetHealth());
+  HealthComponent->OnDeath.AddUObject(this, &AKODBaseCharacter::OnDeath);
+  HealthComponent->OnHealthChanged.AddUObject(this, &AKODBaseCharacter::OnHealthChanged);
 }
 
 // Called every frame
 void AKODBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
-  const auto Health = HealthComponent->GetHealth();
-  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+  
 }
 
 // Called to bind functionality to input
@@ -110,4 +115,16 @@ void AKODBaseCharacter::OnStartRunning() {
 
 void AKODBaseCharacter::OnStopRunning() {
   WantsToRun = false;
+}
+
+void AKODBaseCharacter::OnDeath() {
+ UE_LOG(LogBaseCharacter, Warning, TEXT("Player %s is dead"), *GetName());
+
+  PlayAnimMontage(DeathAnimMontage);
+  GetCharacterMovement()->DisableMovement();
+  SetLifeSpan(5.0f);
+}
+
+void AKODBaseCharacter::OnHealthChanged(float Health) {
+  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

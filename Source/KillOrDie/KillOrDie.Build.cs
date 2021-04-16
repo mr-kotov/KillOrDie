@@ -12,7 +12,7 @@ public class KillOrDie : ModuleRules
 
     PrivateDependencyModuleNames.AddRange(new string[] { });
 
-    PublicIncludePaths.AddRange(new string[] { "KillOrDie/Public/Characters", "KillOrDie/Public/Characters/Components", "KillOrDie/Public/GameModes" });
+    PublicIncludePaths.AddRange(new string[] { "KillOrDie/Public/Characters", "KillOrDie/Public/Characters/Components", "KillOrDie/Public/GameModes", "KillOrDie/Public/Dev" });
     
     // Uncomment if you are using Slate UI
     //PrivateDependencyModuleNames.AddRange();
