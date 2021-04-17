@@ -44,6 +44,8 @@ void AKODBaseCharacter::BeginPlay() {
   OnHealthChanged(HealthComponent->GetHealth());
   HealthComponent->OnDeath.AddUObject(this, &AKODBaseCharacter::OnDeath);
   HealthComponent->OnHealthChanged.AddUObject(this, &AKODBaseCharacter::OnHealthChanged);
+
+  LandedDelegate.AddDynamic(this, &AKODBaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
@@ -130,4 +132,11 @@ void AKODBaseCharacter::OnDeath() {
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {
   HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+void AKODBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
+  const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+  if(FallVelocityZ < LandedDamageVelocity.X) return;
+  const auto FineDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
+  TakeDamage(FineDamage, FDamageEvent{}, nullptr, nullptr);
 }
