@@ -123,6 +123,9 @@ void AKODBaseCharacter::OnDeath() {
   PlayAnimMontage(DeathAnimMontage);
   GetCharacterMovement()->DisableMovement();
   SetLifeSpan(5.0f);
+  if(Controller) {
+    Controller->ChangeState(NAME_Spectating);
+  }
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {
