@@ -10,13 +10,13 @@ class UCameraComponent;
 class USpringArmComponent;
 class UKODHealthComponent;
 class UTextRenderComponent;
+class AKODBaseWeapon;
 
 UCLASS()
 class KILLORDIE_API AKODBaseCharacter : public ACharacter {
   GENERATED_BODY()
 
 public:
-  // Sets default values for this character's properties
   AKODBaseCharacter(const FObjectInitializer& ObjInitializer);
   
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Moving Run")
@@ -38,21 +38,25 @@ protected:
   UPROPERTY(EditDefaultsOnly, Category="Animations")
   UAnimMontage* DeathAnimMontage;
 
+  UPROPERTY(EditDefaultsOnly, Category="Damage")
+  float LifeSpanOnDeath = 5.0f;
+  
   //Предельная скорость при которой будет наноситься урон
-  UPROPERTY(EditDefaultsOnly, Category="Movement")
+  UPROPERTY(EditDefaultsOnly, Category="Damage")
   FVector2D LandedDamageVelocity = FVector2D(900.0f, 1200.0f);
 
-  UPROPERTY(EditDefaultsOnly, Category="Movement")
+  UPROPERTY(EditDefaultsOnly, Category="Damage")
   FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
+
+  UPROPERTY(EditDefaultsOnly, Category="Weapon")
+  TSubclassOf<AKODBaseWeapon> WeaponClass;
   
   virtual void BeginPlay() override;
   
   
 public:
-  // Called every frame
   virtual void Tick(float DeltaTime) override;
 
-  // Called to bind functionality to input
   virtual void SetupPlayerInputComponent(
       class UInputComponent* PlayerInputComponent) override;
 
@@ -79,4 +83,6 @@ private:
 
   UFUNCTION()
   void OnGroundLanded(const FHitResult& Hit);
+  
+  void SpawnWeapon();  
 };

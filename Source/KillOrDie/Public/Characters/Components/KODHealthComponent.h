@@ -7,7 +7,7 @@
 #include "KODHealthComponent.generated.h"
 
 //оповещение умерли или нет
-DECLARE_MULTICAST_DELEGATE(FOnDeath)
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -18,14 +18,14 @@ public:
   // Sets default values for this component's properties
   UKODHealthComponent();
 
-  float GetHealth() const{return Health;}
+  FOnDeath OnDeath;
+  FOnHealthChanged OnHealthChanged;
 
   UFUNCTION(BlueprintCallable)
   bool IsDead() const {return FMath::IsNearlyZero(Health);};
-
-  FOnDeath OnDeath;
-  FOnHealthChanged OnHealthChanged;
   
+  float GetHealth() const{return Health;}
+
 protected:
   /**Максимальное здоровье*/
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))

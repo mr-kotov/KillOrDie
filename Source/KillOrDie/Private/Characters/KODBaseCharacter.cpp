@@ -1,12 +1,14 @@
 // Kill or Die
 
 #include "Characters/KODBaseCharacter.h"
+
 #include "Camera/CameraComponent.h"
 #include "Characters/Components/KODCharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Characters/Components/KODHealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Weapons/KODBaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -33,7 +35,6 @@ AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
   HealthTextComponent->SetupAttachment(GetRootComponent());
 }
 
-// Called when the game starts or when spawned
 void AKODBaseCharacter::BeginPlay() {
   Super::BeginPlay();
   //проверяем создание данных компонентов, работает только в сборках дебага, в релиз не идет
@@ -46,20 +47,22 @@ void AKODBaseCharacter::BeginPlay() {
   HealthComponent->OnHealthChanged.AddUObject(this, &AKODBaseCharacter::OnHealthChanged);
 
   LandedDelegate.AddDynamic(this, &AKODBaseCharacter::OnGroundLanded);
+
+  SpawnWeapon();
 }
 
-// Called every frame
 void AKODBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
   
 }
 
-// Called to bind functionality to input
 void AKODBaseCharacter::SetupPlayerInputComponent(
     UInputComponent* PlayerInputComponent) {
   Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+  check(PlayerInputComponent);
+  
   PlayerInputComponent->BindAxis("MoveForward", this,
                                  &AKODBaseCharacter::MoveForward);
   PlayerInputComponent->BindAxis("MoveRight", this,
@@ -124,7 +127,7 @@ void AKODBaseCharacter::OnDeath() {
 
   PlayAnimMontage(DeathAnimMontage);
   GetCharacterMovement()->DisableMovement();
-  SetLifeSpan(5.0f);
+  SetLifeSpan(LifeSpanOnDeath);
   if(Controller) {
     Controller->ChangeState(NAME_Spectating);
   }
@@ -135,8 +138,17 @@ void AKODBaseCharacter::OnHealthChanged(float Health) {
 }
 
 void AKODBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
-  const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+  const auto FallVelocityZ = -GetVelocity().Z;
   if(FallVelocityZ < LandedDamageVelocity.X) return;
   const auto FineDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
   TakeDamage(FineDamage, FDamageEvent{}, nullptr, nullptr);
+}
+
+void AKODBaseCharacter::SpawnWeapon() {
+  if(!GetWorld()) return;
+  const auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(WeaponClass);
+  if(Weapon) {
+    FAttachmentTransformRules AttachmrntRules(EAttachmentRule::SnapToTarget, false);
+    Weapon->AttachToComponent(GetMesh(), AttachmrntRules, "WeaponSocket");
+  }
 }
