@@ -18,7 +18,8 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/Characters/Components",
 			"KillOrDie/Public/GameModes",
 			"KillOrDie/Public/Dev",
-			"KillOrDie/Public/Weapons"
+			"KillOrDie/Public/Weapons",
+			"KillOrDie/Public/UI"
 		});
 
 		// Uncomment if you are using Slate UI

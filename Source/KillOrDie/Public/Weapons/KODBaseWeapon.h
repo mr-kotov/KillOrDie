@@ -15,11 +15,11 @@ class KILLORDIE_API AKODBaseWeapon : public AActor {
 public:
   AKODBaseWeapon();
 
+  virtual void Fire();
+  
 protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   USkeletalMeshComponent* WeaponMesh;
   
-  virtual void BeginPlay() override;
-
-
+  virtual void BeginPlay() override;  
 };

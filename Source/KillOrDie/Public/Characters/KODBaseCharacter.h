@@ -10,7 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UKODHealthComponent;
 class UTextRenderComponent;
-class AKODBaseWeapon;
+class UKODWeaponComponent;
 
 UCLASS()
 class KILLORDIE_API AKODBaseCharacter : public ACharacter {
@@ -34,6 +34,9 @@ protected:
   
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   UTextRenderComponent* HealthTextComponent;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+  UKODWeaponComponent* WeaponComponent;
   
   UPROPERTY(EditDefaultsOnly, Category="Animations")
   UAnimMontage* DeathAnimMontage;
@@ -48,9 +51,6 @@ protected:
   UPROPERTY(EditDefaultsOnly, Category="Damage")
   FVector2D LandedDamage = FVector2D(10.0f, 100.0f);
 
-  UPROPERTY(EditDefaultsOnly, Category="Weapon")
-  TSubclassOf<AKODBaseWeapon> WeaponClass;
-  
   virtual void BeginPlay() override;
   
   
@@ -83,6 +83,4 @@ private:
 
   UFUNCTION()
   void OnGroundLanded(const FHitResult& Hit);
-  
-  void SpawnWeapon();  
 };

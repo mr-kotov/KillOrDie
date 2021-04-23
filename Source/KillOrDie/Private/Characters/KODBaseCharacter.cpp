@@ -2,13 +2,14 @@
 
 #include "Characters/KODBaseCharacter.h"
 
+#include "KODBaseWeapon.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Components/KODCharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Characters/Components/KODHealthComponent.h"
 #include "Components/TextRenderComponent.h"
-#include "Weapons/KODBaseWeapon.h"
+#include "Components/KODWeaponComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -25,14 +26,21 @@ AKODBaseCharacter::AKODBaseCharacter(const FObjectInitializer& ObjInitializer)
       "SpringArmComponent");
   SpringArmComponent->SetupAttachment(GetRootComponent());
   SpringArmComponent->bUsePawnControlRotation = true;
+  SpringArmComponent->SocketOffset = FVector(0.0f, 100.0f, 80.0f);
 
   CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
   CameraComponent->SetupAttachment(SpringArmComponent);
 
-  HealthComponent = CreateDefaultSubobject<UKODHealthComponent>("HealthComponent");
-  
-  HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>("HealthTextComponent");
+  HealthComponent = CreateDefaultSubobject<UKODHealthComponent>(
+      "HealthComponent");
+
+  HealthTextComponent = CreateDefaultSubobject<UTextRenderComponent>(
+      "HealthTextComponent");
   HealthTextComponent->SetupAttachment(GetRootComponent());
+  HealthTextComponent->SetOwnerNoSee(true);
+
+  WeaponComponent = CreateDefaultSubobject<UKODWeaponComponent>(
+      "WeaponComponent");
 }
 
 void AKODBaseCharacter::BeginPlay() {
@@ -44,17 +52,16 @@ void AKODBaseCharacter::BeginPlay() {
 
   OnHealthChanged(HealthComponent->GetHealth());
   HealthComponent->OnDeath.AddUObject(this, &AKODBaseCharacter::OnDeath);
-  HealthComponent->OnHealthChanged.AddUObject(this, &AKODBaseCharacter::OnHealthChanged);
+  HealthComponent->OnHealthChanged.AddUObject(
+      this, &AKODBaseCharacter::OnHealthChanged);
 
   LandedDelegate.AddDynamic(this, &AKODBaseCharacter::OnGroundLanded);
 
-  SpawnWeapon();
 }
 
 void AKODBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 
-  
 }
 
 void AKODBaseCharacter::SetupPlayerInputComponent(
@@ -62,20 +69,16 @@ void AKODBaseCharacter::SetupPlayerInputComponent(
   Super::SetupPlayerInputComponent(PlayerInputComponent);
 
   check(PlayerInputComponent);
-  
-  PlayerInputComponent->BindAxis("MoveForward", this,
-                                 &AKODBaseCharacter::MoveForward);
-  PlayerInputComponent->BindAxis("MoveRight", this,
-                                 &AKODBaseCharacter::MoveRight);
+  check(WeaponComponent);
+
+  PlayerInputComponent->BindAxis("MoveForward", this, &AKODBaseCharacter::MoveForward);
+  PlayerInputComponent->BindAxis("MoveRight", this, &AKODBaseCharacter::MoveRight);
   PlayerInputComponent->BindAxis("LookUp", this, &AKODBaseCharacter::LookUp);
-  PlayerInputComponent->BindAxis("TurnAround", this,
-                                 &AKODBaseCharacter::TurnAround);
-  PlayerInputComponent->BindAction("Jump", IE_Pressed, this,
-                                   &AKODBaseCharacter::Jump);
-  PlayerInputComponent->BindAction("Run", IE_Pressed, this,
-                                   &AKODBaseCharacter::OnStartRunning);
-  PlayerInputComponent->BindAction("Run", IE_Released, this,
-                                   &AKODBaseCharacter::OnStopRunning);
+  PlayerInputComponent->BindAxis("TurnAround", this, &AKODBaseCharacter::TurnAround);
+  PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AKODBaseCharacter::Jump);
+  PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKODBaseCharacter::OnStartRunning);
+  PlayerInputComponent->BindAction("Run", IE_Released, this, &AKODBaseCharacter::OnStopRunning);
+  PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKODWeaponComponent::Fire);
 }
 
 bool AKODBaseCharacter::IsRunning() const {
@@ -83,26 +86,31 @@ bool AKODBaseCharacter::IsRunning() const {
 }
 
 float AKODBaseCharacter::GetMovementDirection() const {
-  if(GetVelocity().IsZero()) return 0.0f;
+  if (GetVelocity().IsZero()) return 0.0f;
   //получаем нормаль нашего вектора скорости
   const auto VelocityNormal = GetVelocity().GetSafeNormal();
   //высчитываем скаларное произведение вектора направления и вектора нормали, берем Acos от данного скалярного произв и получаем угол между векторами
-  const auto AngleBetween = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+  const auto AngleBetween = FMath::Acos(
+      FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
   //получаем ортогональный вектор
-  const auto CrossProduct = FVector::CrossProduct(GetActorForwardVector(), VelocityNormal);
+  const auto CrossProduct = FVector::CrossProduct(
+      GetActorForwardVector(), VelocityNormal);
   //преобразуем радианы в градусы
   const auto Degrees = FMath::RadiansToDegrees(AngleBetween);
-  return CrossProduct.IsZero() ? Degrees : Degrees * FMath::Sign(CrossProduct.Z); //домножаем на знак координаты Z
+  return CrossProduct.IsZero()
+           ? Degrees
+           : Degrees * FMath::Sign(CrossProduct.Z);
+  //домножаем на знак координаты Z
 }
 
 void AKODBaseCharacter::MoveForward(float Amount) {
   IsMovingForward = Amount > 0.0f;
-  if(Amount == 0.0f) return;
+  if (Amount == 0.0f) return;
   AddMovementInput(GetActorForwardVector(), Amount);
 }
 
 void AKODBaseCharacter::MoveRight(float Amount) {
-  if(Amount == 0.0f) return;
+  if (Amount == 0.0f) return;
   AddMovementInput(GetActorRightVector(), Amount);
 }
 
@@ -123,32 +131,25 @@ void AKODBaseCharacter::OnStopRunning() {
 }
 
 void AKODBaseCharacter::OnDeath() {
- UE_LOG(LogBaseCharacter, Warning, TEXT("Player %s is dead"), *GetName());
+  UE_LOG(LogBaseCharacter, Warning, TEXT("Player %s is dead"), *GetName());
 
   PlayAnimMontage(DeathAnimMontage);
   GetCharacterMovement()->DisableMovement();
   SetLifeSpan(LifeSpanOnDeath);
-  if(Controller) {
+  if (Controller) {
     Controller->ChangeState(NAME_Spectating);
   }
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {
-  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+  HealthTextComponent->SetText(
+      FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 void AKODBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
   const auto FallVelocityZ = -GetVelocity().Z;
-  if(FallVelocityZ < LandedDamageVelocity.X) return;
-  const auto FineDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallVelocityZ);
+  if (FallVelocityZ < LandedDamageVelocity.X) return;
+  const auto FineDamage = FMath::GetMappedRangeValueClamped(
+      LandedDamageVelocity, LandedDamage, FallVelocityZ);
   TakeDamage(FineDamage, FDamageEvent{}, nullptr, nullptr);
-}
-
-void AKODBaseCharacter::SpawnWeapon() {
-  if(!GetWorld()) return;
-  const auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(WeaponClass);
-  if(Weapon) {
-    FAttachmentTransformRules AttachmrntRules(EAttachmentRule::SnapToTarget, false);
-    Weapon->AttachToComponent(GetMesh(), AttachmrntRules, "WeaponSocket");
-  }
 }
