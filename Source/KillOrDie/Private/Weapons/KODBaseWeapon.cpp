@@ -33,6 +33,20 @@ void AKODBaseWeapon::MakeShot() {
     MakeDamage(HitResult);
     DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 3.0f);
     DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 1.0f);
+
+    // FVector ViewLocation;
+    // FRotator ViewRotation;
+    // const auto Controller = GetPlayerController();
+    // if(!Controller) return;
+    // Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+    //
+    // const auto VelocityNormal = HitResult.ImpactNormal;
+    // const auto Angle = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
+    // const auto CrossProduct = FVector::CrossProduct(
+    //   GetActorForwardVector(), VelocityNormal);
+    // const auto Degrees = FMath::RadiansToDegrees(Angle);
+    // UE_LOG(LogBaseWeapon, Error, TEXT("Amgle: %f"), Degrees);
+    // UE_LOG(LogBaseWeapon, Error, TEXT("CrossProduct: %s"), *CrossProduct.ToString());
   } else {
     DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false, 3.0f, 0, 5.0f);
   }
