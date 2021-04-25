@@ -2,26 +2,20 @@
 
 #include "Dev/Damage/KODDevDamageActor.h"
 
-#include <destructible/ModuleDestructible.h>
-
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 AKODDevDamageActor::AKODDevDamageActor() {
-  // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
   PrimaryActorTick.bCanEverTick = true;
 
   SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
   SetRootComponent(SceneComponent);
 }
 
-// Called when the game starts or when spawned
 void AKODDevDamageActor::BeginPlay() {
   Super::BeginPlay();
 }
 
-// Called every frame
 void AKODDevDamageActor::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 

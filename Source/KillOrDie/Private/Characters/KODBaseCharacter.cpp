@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Characters/Components/KODHealthComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/KODWeaponComponent.h"
 
@@ -139,6 +140,8 @@ void AKODBaseCharacter::OnDeath() {
   if (Controller) {
     Controller->ChangeState(NAME_Spectating);
   }
+  GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+  HealthTextComponent->SetVisibility(false);
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {

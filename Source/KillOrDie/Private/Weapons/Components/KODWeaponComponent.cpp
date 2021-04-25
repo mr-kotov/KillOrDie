@@ -30,4 +30,5 @@ void UKODWeaponComponent::SpawnWeapon() {
   
   FAttachmentTransformRules AttachmrntRules(EAttachmentRule::SnapToTarget, false);
   CurrentWeapon->AttachToComponent( Character->GetMesh(), AttachmrntRules, WeaponAttachPointName);
+  CurrentWeapon->SetOwner(Character);
 }
