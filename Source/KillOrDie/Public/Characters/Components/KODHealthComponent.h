@@ -52,8 +52,7 @@ protected:
 
 private:
   float Health = 0.0f;
-  AActor* ComponentOwner;
-  
+    
   FTimerHandle HealTimerHandle;
   
   UFUNCTION()

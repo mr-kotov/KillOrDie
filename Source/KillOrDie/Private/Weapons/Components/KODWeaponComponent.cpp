@@ -9,9 +9,14 @@ UKODWeaponComponent::UKODWeaponComponent() {
   PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UKODWeaponComponent::Fire() {
+void UKODWeaponComponent::StartFire() {
   if(!CurrentWeapon) return;
-  CurrentWeapon->Fire();
+  CurrentWeapon->StartFire();
+}
+
+void UKODWeaponComponent::StopFire() {
+  if(!CurrentWeapon) return;
+  CurrentWeapon->StopFire();
 }
 
 void UKODWeaponComponent::BeginPlay() {

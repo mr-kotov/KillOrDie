@@ -3,7 +3,6 @@
 #include "Weapons/KODBaseWeapon.h"
 
 #include "DrawDebugHelpers.h"
-#include "KODBaseCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
 
@@ -23,6 +22,7 @@ void AKODBaseWeapon::BeginPlay() {
 void AKODBaseWeapon::MakeShot() {
   if(!GetWorld()) return;
 
+  UE_LOG(LogBaseWeapon, Error, TEXT("Shot"));
   FVector TraceStart, TraceEnd;
   if(!GetTraceData(TraceStart, TraceEnd)) return;
 
@@ -84,7 +84,8 @@ bool AKODBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const 
   /**Получаем положенее в мире, начало траектории*/
   TraceStart = ViewLocation;//SocketTransform.GetLocation();
   /**Получаем направление стрельбы*/
-  const FVector ShootDirection = ViewRotation.Vector();//SocketTransform.GetRotation().GetForwardVector();
+  const auto HalfRad = FMath::DegreesToRadians(BulletSpread);
+  const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);//SocketTransform.GetRotation().GetForwardVector();
   /**Получаем последнюю точку для формирования траектории стрельбы*/
   TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
   return true;
@@ -97,6 +98,11 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
   GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
 
-void AKODBaseWeapon::Fire() {
+void AKODBaseWeapon::StartFire() {
   MakeShot();
+  GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AKODBaseWeapon::MakeShot, TimerBetweenShots, true, 0.2f);
+}
+
+void AKODBaseWeapon::StopFire() {
+  GetWorldTimerManager().ClearTimer(ShotTimerHandle);
 }

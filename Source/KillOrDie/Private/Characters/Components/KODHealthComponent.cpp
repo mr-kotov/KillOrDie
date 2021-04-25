@@ -15,7 +15,7 @@ void UKODHealthComponent::BeginPlay() {
   Super::BeginPlay();
   
   SetHealth(MaxHealth);
-  ComponentOwner = GetOwner();
+  AActor* ComponentOwner = GetOwner();
   if(ComponentOwner) ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UKODHealthComponent::OnTakeAnyDamage);
 }
 
@@ -32,8 +32,8 @@ void UKODHealthComponent::OnTakeAnyDamage(AActor* DamagedActor,
   if(IsDead()) {
     //если умерли сообщаем всем подписантам что умерли
     OnDeath.Broadcast();
-  } else if(AutoHeal && ComponentOwner) {
-    ComponentOwner->GetWorldTimerManager().SetTimer(HealTimerHandle, this, &UKODHealthComponent::OnTimerRecoveryHealth, HealUpdateFrequency, true, HealDelay);
+  } else if(AutoHeal && GetWorld()) {
+    GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &UKODHealthComponent::OnTimerRecoveryHealth, HealUpdateFrequency, true, HealDelay);
   }
 }
 
@@ -44,8 +44,8 @@ void UKODHealthComponent::OnTimerRecoveryHealth() {
 }
 
 void UKODHealthComponent::OnTimerRecoveryHealthEnd() {
-  if(ComponentOwner) 
-    ComponentOwner->GetWorldTimerManager().ClearTimer(HealTimerHandle);
+  if(GetWorld()) 
+    GetWorld()->GetTimerManager().ClearTimer(HealTimerHandle);
 }
 
 void UKODHealthComponent::SetHealth(float NewHealth) {

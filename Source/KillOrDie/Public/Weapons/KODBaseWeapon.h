@@ -15,7 +15,8 @@ class KILLORDIE_API AKODBaseWeapon : public AActor {
 public:
   AKODBaseWeapon();
 
-  virtual void Fire();
+  virtual void StartFire();
+  virtual void StopFire();
   
 protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Mesh")
@@ -31,16 +32,24 @@ protected:
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
   float DamageAmount = 10.0f;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+  float TimerBetweenShots = 0.1f;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+  float BulletSpread = 1.5f;
     
+  APlayerController* GetPlayerController() const;
+  
   virtual void BeginPlay() override;
 
   void MakeShot();
   void MakeDamage(const FHitResult& HitResult);
-
-private:
-  APlayerController* GetPlayerController() const;
   bool GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const;
   FVector GetMuzzleWorldLocation() const;
   bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;
   void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
+
+private:
+  FTimerHandle ShotTimerHandle;
 };

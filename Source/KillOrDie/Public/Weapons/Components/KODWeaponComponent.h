@@ -15,7 +15,8 @@ class KILLORDIE_API UKODWeaponComponent : public UActorComponent {
 public:
   UKODWeaponComponent();
 
-  void Fire();
+  void StartFire();
+  void StopFire();
 
 protected:
   UPROPERTY(EditDefaultsOnly, Category="WeaponComponent")

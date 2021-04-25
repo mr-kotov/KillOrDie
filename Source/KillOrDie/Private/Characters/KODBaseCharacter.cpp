@@ -79,7 +79,8 @@ void AKODBaseCharacter::SetupPlayerInputComponent(
   PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AKODBaseCharacter::Jump);
   PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AKODBaseCharacter::OnStartRunning);
   PlayerInputComponent->BindAction("Run", IE_Released, this, &AKODBaseCharacter::OnStopRunning);
-  PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKODWeaponComponent::Fire);
+  PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKODWeaponComponent::StartFire);
+  PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKODWeaponComponent::StopFire);
 }
 
 bool AKODBaseCharacter::IsRunning() const {
