@@ -1,8 +1,6 @@
 // Kill or Die
 
 #include "Weapons/KODBaseWeapon.h"
-
-#include "DrawDebugHelpers.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
 
@@ -20,36 +18,6 @@ void AKODBaseWeapon::BeginPlay() {
 }
 
 void AKODBaseWeapon::MakeShot() {
-  if(!GetWorld()) return;
-
-  UE_LOG(LogBaseWeapon, Error, TEXT("Shot"));
-  FVector TraceStart, TraceEnd;
-  if(!GetTraceData(TraceStart, TraceEnd)) return;
-
-  FHitResult HitResult;
-  MakeHit(HitResult, TraceStart, TraceEnd);
-  
-  if(HitResult.bBlockingHit) {
-    MakeDamage(HitResult);
-    DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 3.0f);
-    DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 1.0f);
-
-    // FVector ViewLocation;
-    // FRotator ViewRotation;
-    // const auto Controller = GetPlayerController();
-    // if(!Controller) return;
-    // Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
-    //
-    // const auto VelocityNormal = HitResult.ImpactNormal;
-    // const auto Angle = FMath::Acos(FVector::DotProduct(GetActorForwardVector(), VelocityNormal));
-    // const auto CrossProduct = FVector::CrossProduct(
-    //   GetActorForwardVector(), VelocityNormal);
-    // const auto Degrees = FMath::RadiansToDegrees(Angle);
-    // UE_LOG(LogBaseWeapon, Error, TEXT("Amgle: %f"), Degrees);
-    // UE_LOG(LogBaseWeapon, Error, TEXT("CrossProduct: %s"), *CrossProduct.ToString());
-  } else {
-    DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false, 3.0f, 0, 5.0f);
-  }
 }
 
 void AKODBaseWeapon::MakeDamage(const FHitResult& HitResult) {
@@ -84,8 +52,7 @@ bool AKODBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const 
   /**Получаем положенее в мире, начало траектории*/
   TraceStart = ViewLocation;//SocketTransform.GetLocation();
   /**Получаем направление стрельбы*/
-  const auto HalfRad = FMath::DegreesToRadians(BulletSpread);
-  const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);//SocketTransform.GetRotation().GetForwardVector();
+  const FVector ShootDirection = ViewRotation.Vector();//SocketTransform.GetRotation().GetForwardVector();
   /**Получаем последнюю точку для формирования траектории стрельбы*/
   TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
   return true;
@@ -99,10 +66,7 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
 }
 
 void AKODBaseWeapon::StartFire() {
-  MakeShot();
-  GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AKODBaseWeapon::MakeShot, TimerBetweenShots, true, 0.2f);
 }
 
 void AKODBaseWeapon::StopFire() {
-  GetWorldTimerManager().ClearTimer(ShotTimerHandle);
 }
