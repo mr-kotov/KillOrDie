@@ -1,6 +1,6 @@
 // Kill or Die
 
-#include "Weapons/KODRifleWeapon.h"
+#include "Weapons/Rifle/KODRifleWeapon.h"
 #include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);

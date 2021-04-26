@@ -19,6 +19,8 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/GameModes",
 			"KillOrDie/Public/Dev",
 			"KillOrDie/Public/Weapons",
+			"KillOrDie/Public/Weapons/Launcher",
+			"KillOrDie/Public/Weapons/Rifle",
 			"KillOrDie/Public/UI"
 		});
 
