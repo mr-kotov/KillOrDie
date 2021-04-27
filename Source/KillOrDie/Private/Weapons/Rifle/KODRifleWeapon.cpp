@@ -16,7 +16,6 @@ void AKODRifleWeapon::StopFire() {
 void AKODRifleWeapon::MakeShot() {
   if(!GetWorld()) return;
 
-  UE_LOG(LogRifleWeapon, Error, TEXT("Shot"));
   FVector TraceStart, TraceEnd;
   if(!GetTraceData(TraceStart, TraceEnd)) return;
 
