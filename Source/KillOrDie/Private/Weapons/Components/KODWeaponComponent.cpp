@@ -11,7 +11,8 @@ UKODWeaponComponent::UKODWeaponComponent() {
 }
 
 void UKODWeaponComponent::StartFire() {
-  if(!CurrentWeapon) return;
+  if(!CanFire()) return;
+  
   CurrentWeapon->StartFire();
 }
 
@@ -21,12 +22,15 @@ void UKODWeaponComponent::StopFire() {
 }
 
 void UKODWeaponComponent::NextWeapon() {
+  if(!CanEquip()) return;
+  
   CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
   EquipWeapon(CurrentWeaponIndex);
 }
 
 void UKODWeaponComponent::BeginPlay() {
   Super::BeginPlay();
+  InitAnimations();
   SpawnWeapons();
   EquipWeapon(CurrentWeaponIndex);
 }
@@ -75,6 +79,7 @@ void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
   
   CurrentWeapon = Weapons[WeaponIndex];
   AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+  EquipAnimInProgress = true;
   PlayAnimMontage(EquipAnimMontage);
 }
 
@@ -90,8 +95,10 @@ void UKODWeaponComponent::InitAnimations() {
   
   const auto NotifyEvents = EquipAnimMontage->Notifies;
   for (auto NotifyEvent: NotifyEvents) {
+    UE_LOG(LogTemp, Warning, TEXT("InitAnimations"));
     auto EquipFinishedNotify = Cast<UKODEquipFinishedAnimNotify>(NotifyEvent.Notify);
     if(EquipFinishedNotify) {
+      
       EquipFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnEquipFinished);
       break;
     }
@@ -100,9 +107,15 @@ void UKODWeaponComponent::InitAnimations() {
 
 void UKODWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp) {
   ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
-  if(!Character) return;
+  if(!Character || Character->GetMesh() != MeshComp) return;
 
-  if(Character->GetMesh() == MeshComp) {
-    
-  }
+  EquipAnimInProgress = false;
+}
+
+bool UKODWeaponComponent::CanFire() const {
+  return CurrentWeapon && !EquipAnimInProgress;
+}
+
+bool UKODWeaponComponent::CanEquip() const {
+  return !EquipAnimInProgress;
 }

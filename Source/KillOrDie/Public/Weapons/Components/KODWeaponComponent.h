@@ -42,6 +42,7 @@ private:
   TArray<AKODBaseWeapon*> Weapons;  
 
   int32 CurrentWeaponIndex = 0;
+  bool EquipAnimInProgress = false;
   
   void SpawnWeapons();
   void AttachWeaponToSocket(AKODBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName SocketName);
@@ -49,4 +50,6 @@ private:
   void PlayAnimMontage(UAnimMontage* Animation);
   void InitAnimations();
   void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+  bool CanFire() const;
+  bool CanEquip() const;
 };
