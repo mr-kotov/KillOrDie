@@ -3,6 +3,7 @@
 #include "Weapons/Components/KODWeaponComponent.h"
 
 #include "KODBaseCharacter.h"
+#include "KODEquipFinishedAnimNotify.h"
 #include "Weapons/KODBaseWeapon.h"
 
 UKODWeaponComponent::UKODWeaponComponent() {
@@ -74,4 +75,34 @@ void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
   
   CurrentWeapon = Weapons[WeaponIndex];
   AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+  PlayAnimMontage(EquipAnimMontage);
+}
+
+void UKODWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) {
+  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
+  if(!Character) return;
+
+  Character->PlayAnimMontage(Animation);
+}
+
+void UKODWeaponComponent::InitAnimations() {
+  if(!EquipAnimMontage) return;
+  
+  const auto NotifyEvents = EquipAnimMontage->Notifies;
+  for (auto NotifyEvent: NotifyEvents) {
+    auto EquipFinishedNotify = Cast<UKODEquipFinishedAnimNotify>(NotifyEvent.Notify);
+    if(EquipFinishedNotify) {
+      EquipFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnEquipFinished);
+      break;
+    }
+  }
+}
+
+void UKODWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp) {
+  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
+  if(!Character) return;
+
+  if(Character->GetMesh() == MeshComp) {
+    
+  }
 }
