@@ -19,21 +19,59 @@ void UKODWeaponComponent::StopFire() {
   CurrentWeapon->StopFire();
 }
 
-void UKODWeaponComponent::BeginPlay() {
-  Super::BeginPlay();
-  SpawnWeapon();
+void UKODWeaponComponent::NextWeapon() {
+  CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
+  EquipWeapon(CurrentWeaponIndex);
 }
 
-void UKODWeaponComponent::SpawnWeapon() {
-  if(!GetWorld()) return;
-  
-  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
-  if(!Character) return;
+void UKODWeaponComponent::BeginPlay() {
+  Super::BeginPlay();
+  SpawnWeapons();
+  EquipWeapon(CurrentWeaponIndex);
+}
 
-  CurrentWeapon = GetWorld()->SpawnActor<AKODBaseWeapon>(WeaponClass);
-  if(!CurrentWeapon) return;
+void UKODWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+  CurrentWeapon = nullptr;
+  for (auto Weapon : Weapons) {
+    Weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    Weapon->Destroy();
+  }
+  Weapons.Empty();
+  Super::EndPlay(EndPlayReason);
+}
+
+void UKODWeaponComponent::SpawnWeapons() {  
+  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
+  if(!Character && !GetWorld()) return;
+
+  for (auto WeaponClass : WeaponClasses) {
+    auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(WeaponClass);
+    if(!Weapon) continue;
+
+    Weapon->SetOwner(Character);
+    Weapons.Add(Weapon);
+
+    AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorSocketName);
+  }
+}
+
+void UKODWeaponComponent::AttachWeaponToSocket(AKODBaseWeapon* Weapon,
+    USceneComponent* SceneComponent, const FName SocketName) {
+  if(!Weapon && !SceneComponent) return;
   
   FAttachmentTransformRules AttachmrntRules(EAttachmentRule::SnapToTarget, false);
-  CurrentWeapon->AttachToComponent( Character->GetMesh(), AttachmrntRules, WeaponAttachPointName);
-  CurrentWeapon->SetOwner(Character);
+  Weapon->AttachToComponent( SceneComponent, AttachmrntRules, SocketName);
+}
+
+void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
+  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
+  if(!Character && !GetWorld()) return;
+
+  if(CurrentWeapon) {
+    CurrentWeapon->StopFire();
+    AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorSocketName);
+  }
+  
+  CurrentWeapon = Weapons[WeaponIndex];
+  AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
 }

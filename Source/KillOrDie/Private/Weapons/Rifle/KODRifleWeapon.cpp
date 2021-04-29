@@ -46,3 +46,9 @@ GetTraceData(FVector& TraceStart, FVector& TraceEnd) const {
   TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
   return true;
 }
+
+void AKODRifleWeapon::MakeDamage(const FHitResult& HitResult) {
+  const auto DamgeActor = HitResult.GetActor();
+  if(!DamgeActor) return;
+  DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
+}

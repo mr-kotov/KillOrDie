@@ -20,12 +20,6 @@ void AKODBaseWeapon::BeginPlay() {
 void AKODBaseWeapon::MakeShot() {
 }
 
-void AKODBaseWeapon::MakeDamage(const FHitResult& HitResult) {
-  const auto DamgeActor = HitResult.GetActor();
-  if(!DamgeActor) return;
-  DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
-}
-
 APlayerController* AKODBaseWeapon::GetPlayerController() const {
   const auto Player = Cast<ACharacter>(GetOwner());
   if(!Player) nullptr;

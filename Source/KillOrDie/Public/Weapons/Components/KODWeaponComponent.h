@@ -17,20 +17,30 @@ public:
 
   void StartFire();
   void StopFire();
+  void NextWeapon();
 
 protected:
-  UPROPERTY(EditDefaultsOnly, Category="WeaponComponent")
-  TSubclassOf<AKODBaseWeapon> WeaponClass;
+  UPROPERTY(EditDefaultsOnly, Category="Weapon")
+  TArray<TSubclassOf<AKODBaseWeapon>> WeaponClasses;
 
-  UPROPERTY(EditDefaultsOnly, Category="WeaponComponent")
-  FName WeaponAttachPointName = "WeaponSocket";
+  UPROPERTY(EditDefaultsOnly, Category="Weapon")
+  FName WeaponEquipSocketName = "WeaponSocket";
   
-
+  UPROPERTY(EditDefaultsOnly, Category="Weapon")
+  FName WeaponArmorSocketName = "ArmorySocket";
+  
   virtual void BeginPlay() override;
+  virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
   UPROPERTY()
   AKODBaseWeapon* CurrentWeapon = nullptr;
+  UPROPERTY()
+  TArray<AKODBaseWeapon*> Weapons;  
+
+  int32 CurrentWeaponIndex = 0;
   
-  void SpawnWeapon();  
+  void SpawnWeapons();
+  void AttachWeaponToSocket(AKODBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName SocketName);
+  void EquipWeapon(int32 WeaponIndex);
 };

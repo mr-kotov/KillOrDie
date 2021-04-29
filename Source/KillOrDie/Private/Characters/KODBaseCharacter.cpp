@@ -81,6 +81,7 @@ void AKODBaseCharacter::SetupPlayerInputComponent(
   PlayerInputComponent->BindAction("Run", IE_Released, this, &AKODBaseCharacter::OnStopRunning);
   PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKODWeaponComponent::StartFire);
   PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKODWeaponComponent::StopFire);
+  PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UKODWeaponComponent::NextWeapon);
 }
 
 bool AKODBaseCharacter::IsRunning() const {
@@ -143,6 +144,7 @@ void AKODBaseCharacter::OnDeath() {
   }
   GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
   HealthTextComponent->SetVisibility(false);
+  WeaponComponent->StopFire();
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {
