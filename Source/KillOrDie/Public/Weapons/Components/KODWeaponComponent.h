@@ -8,6 +8,17 @@
 
 class AKODBaseWeapon;
 
+USTRUCT(BlueprintType)
+struct FWeaponData {
+  GENERATED_BODY()
+  
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
+  TSubclassOf<AKODBaseWeapon> WeaponClass;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
+  UAnimMontage* ReloadAnimMontage;
+};
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class KILLORDIE_API UKODWeaponComponent : public UActorComponent {
   GENERATED_BODY()
@@ -18,10 +29,11 @@ public:
   void StartFire();
   void StopFire();
   void NextWeapon();
+  void Reload();
 
 protected:
-  UPROPERTY(EditDefaultsOnly, Category="Weapon")
-  TArray<TSubclassOf<AKODBaseWeapon>> WeaponClasses;
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
+  TArray<FWeaponData> WeaponData;
 
   UPROPERTY(EditDefaultsOnly, Category="Weapon")
   FName WeaponEquipSocketName = "WeaponSocket";
@@ -38,9 +50,13 @@ protected:
 private:
   UPROPERTY()
   AKODBaseWeapon* CurrentWeapon = nullptr;
+  
   UPROPERTY()
   TArray<AKODBaseWeapon*> Weapons;  
 
+  UPROPERTY()
+  UAnimMontage* CurrentReloadAnimMontage = nullptr; 
+  
   int32 CurrentWeaponIndex = 0;
   bool EquipAnimInProgress = false;
   

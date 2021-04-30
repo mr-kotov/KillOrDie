@@ -82,6 +82,7 @@ void AKODBaseCharacter::SetupPlayerInputComponent(
   PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &UKODWeaponComponent::StartFire);
   PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKODWeaponComponent::StopFire);
   PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UKODWeaponComponent::NextWeapon);
+  PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &UKODWeaponComponent::Reload);
 }
 
 bool AKODBaseCharacter::IsRunning() const {

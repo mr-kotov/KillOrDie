@@ -28,6 +28,10 @@ void UKODWeaponComponent::NextWeapon() {
   EquipWeapon(CurrentWeaponIndex);
 }
 
+void UKODWeaponComponent::Reload() {
+  PlayAnimMontage(CurrentReloadAnimMontage);
+}
+
 void UKODWeaponComponent::BeginPlay() {
   Super::BeginPlay();
   InitAnimations();
@@ -49,8 +53,8 @@ void UKODWeaponComponent::SpawnWeapons() {
   ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
   if(!Character && !GetWorld()) return;
 
-  for (auto WeaponClass : WeaponClasses) {
-    auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(WeaponClass);
+  for (auto OneWeaponData : WeaponData) {
+    auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(OneWeaponData.WeaponClass);
     if(!Weapon) continue;
 
     Weapon->SetOwner(Character);
@@ -69,6 +73,8 @@ void UKODWeaponComponent::AttachWeaponToSocket(AKODBaseWeapon* Weapon,
 }
 
 void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
+  if(WeaponIndex < 0 || WeaponIndex >= Weapons.Num()) return;
+  
   ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
   if(!Character && !GetWorld()) return;
 
@@ -78,6 +84,12 @@ void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
   }
   
   CurrentWeapon = Weapons[WeaponIndex];
+  //CurrentReloadAnimMontage = WeaponData[WeaponIndex].ReloadAnimMontage;
+  //лямбда функция для поиска нужного класса 
+  const auto CurrentWeaponData = WeaponData.FindByPredicate([&](const FWeaponData& Data) {
+    return Data.WeaponClass == CurrentWeapon->GetClass();
+  });
+  CurrentReloadAnimMontage = CurrentWeaponData ? CurrentWeaponData->ReloadAnimMontage : nullptr;
   AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
   EquipAnimInProgress = true;
   PlayAnimMontage(EquipAnimMontage);
