@@ -14,10 +14,16 @@ void AKODRifleWeapon::StopFire() {
 }
 
 void AKODRifleWeapon::MakeShot() {
-  if(!GetWorld()) return;
+  if(!GetWorld() || IsAmmoEmpty()) {
+    StopFire();
+    return;
+  }
 
   FVector TraceStart, TraceEnd;
-  if(!GetTraceData(TraceStart, TraceEnd)) return;
+  if(!GetTraceData(TraceStart, TraceEnd)) {
+    StopFire();
+    return;
+  }
 
   FHitResult HitResult;
   MakeHit(HitResult, TraceStart, TraceEnd);
@@ -29,6 +35,7 @@ void AKODRifleWeapon::MakeShot() {
   } else {
     DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false, 3.0f, 0, 5.0f);
   }
+  DecreaseAmmo();
 }
 
 bool AKODRifleWeapon::

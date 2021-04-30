@@ -10,7 +10,7 @@ void AKODLauncherWeapon::StartFire() {
 }
 
 void AKODLauncherWeapon::MakeShot() {
-  if(!GetWorld()) return;
+  if(!GetWorld() || IsAmmoEmpty()) return;
 
   FVector TraceStart, TraceEnd;
   if(!GetTraceData(TraceStart, TraceEnd)) return;
@@ -30,5 +30,6 @@ void AKODLauncherWeapon::MakeShot() {
     //завершаем спавна объекта, вызываем beginPlay
     Projectile->FinishSpawning(SpawnTransform);
   }
+  DecreaseAmmo();
   //set projectile params
 }

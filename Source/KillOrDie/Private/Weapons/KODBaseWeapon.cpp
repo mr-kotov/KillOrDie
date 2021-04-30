@@ -15,6 +15,7 @@ AKODBaseWeapon::AKODBaseWeapon() {
 void AKODBaseWeapon::BeginPlay() {
   Super::BeginPlay();
   check(WeaponMesh);
+  CurrentAmmo = DefaultAmmo;
 }
 
 void AKODBaseWeapon::MakeShot() {
@@ -57,6 +58,37 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
   FCollisionQueryParams CollisionParams;
   CollisionParams.AddIgnoredActor(GetOwner());
   GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
+}
+
+void AKODBaseWeapon::DecreaseAmmo() {
+  CurrentAmmo.Bullets--;
+  LogAmmo();
+
+  if(IsClipEmpty() && !IsAmmoEmpty()) {
+    ChangeClip();
+  }
+}
+
+bool AKODBaseWeapon::IsAmmoEmpty() const {
+  return !CurrentAmmo.Infinite && CurrentAmmo.Clips == 0 && IsClipEmpty();
+}
+
+bool AKODBaseWeapon::IsClipEmpty() const {
+  return CurrentAmmo.Bullets == 0;
+}
+
+void AKODBaseWeapon::ChangeClip() {
+  CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+  if(!CurrentAmmo.Infinite) {
+    CurrentAmmo.Clips--;
+  }
+  UE_LOG(LogBaseWeapon, Warning, TEXT("------CLips------"));
+}
+
+void AKODBaseWeapon::LogAmmo() {
+  FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
+  AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
+  UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }
 
 void AKODBaseWeapon::StartFire() {
