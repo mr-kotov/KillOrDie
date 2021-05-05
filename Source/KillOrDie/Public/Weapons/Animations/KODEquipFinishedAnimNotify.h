@@ -3,17 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimNotifies/AnimNotify.h"
+
+#include "Weapons/Animations/KODAnimNotify.h"
 #include "KODEquipFinishedAnimNotify.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*);
-
 UCLASS()
-class KILLORDIE_API UKODEquipFinishedAnimNotify : public UAnimNotify {
+class KILLORDIE_API UKODEquipFinishedAnimNotify : public UKODAnimNotify {
   GENERATED_BODY()
-
-public:
-  virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
-
-  FOnNotifiedSignature OnNotified;
 };

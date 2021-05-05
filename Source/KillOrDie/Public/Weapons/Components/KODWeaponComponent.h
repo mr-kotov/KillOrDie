@@ -59,6 +59,7 @@ private:
   
   int32 CurrentWeaponIndex = 0;
   bool EquipAnimInProgress = false;
+  bool ReloadAnimInProgress = false;
   
   void SpawnWeapons();
   void AttachWeaponToSocket(AKODBaseWeapon* Weapon, USceneComponent* SceneComponent, const FName SocketName);
@@ -66,6 +67,23 @@ private:
   void PlayAnimMontage(UAnimMontage* Animation);
   void InitAnimations();
   void OnEquipFinished(USkeletalMeshComponent* MeshComp);
+  void OnReloadFinished(USkeletalMeshComponent* MeshComp);
   bool CanFire() const;
   bool CanEquip() const;
+  bool CanReload() const;
+
+  void OnEmptyClip();
+  void ChangeClip();
+  
+  template<typename T> T* FindNotifyByClass(UAnimSequenceBase* Animation) {
+    if(!Animation) return nullptr;
+    const auto NotifyEvents = Animation->Notifies;
+    for (auto NotifyEvent: NotifyEvents) {
+      auto AnimNotify = Cast<T>(NotifyEvent.Notify);
+      if(AnimNotify) {
+        return AnimNotify;
+      }
+    }
+    return nullptr;
+  };
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "KODBaseWeapon.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
+
 class USkeletalMeshComponent;
 
 USTRUCT(BlueprintType)
@@ -29,9 +31,14 @@ class KILLORDIE_API AKODBaseWeapon : public AActor {
 public:
   AKODBaseWeapon();
 
+  FOnClipEmptySignature OnClipEmpty;
+  
   virtual void StartFire();
   virtual void StopFire();
 
+  void ChangeClip();
+  bool CanRealod() const;
+  
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
   USkeletalMeshComponent* WeaponMesh;
@@ -60,7 +67,6 @@ protected:
   void DecreaseAmmo();
   bool IsAmmoEmpty() const;
   bool IsClipEmpty() const;
-  void ChangeClip();
   void LogAmmo();
   
 private:

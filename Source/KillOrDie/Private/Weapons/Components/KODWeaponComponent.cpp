@@ -4,6 +4,7 @@
 
 #include "KODBaseCharacter.h"
 #include "KODEquipFinishedAnimNotify.h"
+#include "KODReloadFinishedAnimNotify.h"
 #include "Weapons/KODBaseWeapon.h"
 
 UKODWeaponComponent::UKODWeaponComponent() {
@@ -26,10 +27,6 @@ void UKODWeaponComponent::NextWeapon() {
   
   CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
   EquipWeapon(CurrentWeaponIndex);
-}
-
-void UKODWeaponComponent::Reload() {
-  PlayAnimMontage(CurrentReloadAnimMontage);
 }
 
 void UKODWeaponComponent::BeginPlay() {
@@ -57,6 +54,7 @@ void UKODWeaponComponent::SpawnWeapons() {
     auto Weapon = GetWorld()->SpawnActor<AKODBaseWeapon>(OneWeaponData.WeaponClass);
     if(!Weapon) continue;
 
+    Weapon->OnClipEmpty.AddUObject(this, &UKODWeaponComponent::OnEmptyClip);
     Weapon->SetOwner(Character);
     Weapons.Add(Weapon);
 
@@ -103,31 +101,58 @@ void UKODWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) {
 }
 
 void UKODWeaponComponent::InitAnimations() {
-  if(!EquipAnimMontage) return;
-  
-  const auto NotifyEvents = EquipAnimMontage->Notifies;
-  for (auto NotifyEvent: NotifyEvents) {
-    UE_LOG(LogTemp, Warning, TEXT("InitAnimations"));
-    auto EquipFinishedNotify = Cast<UKODEquipFinishedAnimNotify>(NotifyEvent.Notify);
-    if(EquipFinishedNotify) {
-      
-      EquipFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnEquipFinished);
-      break;
-    }
+  auto EquipFinishedNotify = FindNotifyByClass<UKODEquipFinishedAnimNotify>(EquipAnimMontage);
+  if(EquipFinishedNotify) {
+    EquipFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnEquipFinished);
+  }
+  for (auto OneWeaponData: WeaponData) {
+    auto ReloadFinishedNotify = FindNotifyByClass<UKODReloadFinishedAnimNotify>(OneWeaponData.ReloadAnimMontage);
+    if(!ReloadFinishedNotify) continue;
+    ReloadFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnReloadFinished);
+    
   }
 }
 
 void UKODWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComp) {
   ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
   if(!Character || Character->GetMesh() != MeshComp) return;
-
   EquipAnimInProgress = false;
 }
 
 bool UKODWeaponComponent::CanFire() const {
-  return CurrentWeapon && !EquipAnimInProgress;
+  return CurrentWeapon && !EquipAnimInProgress && !ReloadAnimInProgress;
 }
 
 bool UKODWeaponComponent::CanEquip() const {
-  return !EquipAnimInProgress;
+  return !EquipAnimInProgress && !ReloadAnimInProgress;
+}
+
+void UKODWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComp) {
+  ACharacter* Character = Cast<AKODBaseCharacter>(GetOwner());
+  if(!Character || Character->GetMesh() != MeshComp) return;
+
+  ReloadAnimInProgress = false;
+}
+
+bool UKODWeaponComponent::CanReload() const {
+  return CurrentWeapon
+         && !EquipAnimInProgress
+         && !ReloadAnimInProgress
+         && CurrentWeapon->CanRealod();
+}
+
+void UKODWeaponComponent::Reload() {
+  ChangeClip();
+}
+
+void UKODWeaponComponent::OnEmptyClip() {
+  ChangeClip();
+}
+
+void UKODWeaponComponent::ChangeClip() {
+  if(!CanReload()) return;
+  CurrentWeapon->StopFire();
+  CurrentWeapon->ChangeClip();
+  ReloadAnimInProgress = true;
+  PlayAnimMontage(CurrentReloadAnimMontage);
 }

@@ -61,11 +61,14 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
 }
 
 void AKODBaseWeapon::DecreaseAmmo() {
+  if(CurrentAmmo.Clips == 0) {
+    return;
+  }
   CurrentAmmo.Bullets--;
   LogAmmo();
 
   if(IsClipEmpty() && !IsAmmoEmpty()) {
-    ChangeClip();
+    OnClipEmpty.Broadcast();
   }
 }
 
@@ -78,11 +81,19 @@ bool AKODBaseWeapon::IsClipEmpty() const {
 }
 
 void AKODBaseWeapon::ChangeClip() {
-  CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+  
   if(!CurrentAmmo.Infinite) {
+    if(CurrentAmmo.Clips == 0) {
+      return;
+    }
     CurrentAmmo.Clips--;
   }
+  CurrentAmmo.Bullets = DefaultAmmo.Bullets;
   UE_LOG(LogBaseWeapon, Warning, TEXT("------CLips------"));
+}
+
+bool AKODBaseWeapon::CanRealod() const {
+  return  CurrentAmmo.Bullets < DefaultAmmo.Bullets && CurrentAmmo.Clips > 0;
 }
 
 void AKODBaseWeapon::LogAmmo() {
