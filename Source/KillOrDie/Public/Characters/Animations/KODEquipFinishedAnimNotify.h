@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "Weapons/Animations/KODAnimNotify.h"
+#include "Characters/Animations/KODAnimNotify.h"
 #include "KODEquipFinishedAnimNotify.generated.h"
 
 UCLASS()

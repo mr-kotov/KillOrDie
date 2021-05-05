@@ -4,11 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "KODCoreTypes.h"
 #include "KODHealthComponent.generated.h"
-
-//оповещение умерли или нет
-DECLARE_MULTICAST_DELEGATE(FOnDeath);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class KILLORDIE_API UKODHealthComponent : public UActorComponent {

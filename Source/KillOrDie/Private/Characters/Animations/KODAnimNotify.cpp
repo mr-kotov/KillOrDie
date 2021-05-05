@@ -1,6 +1,6 @@
 // Kill or Die
 
-#include "Weapons/Animations/KODAnimNotify.h"
+#include "Characters/Animations/KODAnimNotify.h"
 
 void UKODAnimNotify::Notify(USkeletalMeshComponent* MeshComp,
     UAnimSequenceBase* Animation) {

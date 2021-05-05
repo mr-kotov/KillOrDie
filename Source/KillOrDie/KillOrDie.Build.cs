@@ -22,7 +22,7 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/Weapons/Launcher",
 			"KillOrDie/Public/Weapons/Rifle",
 			"KillOrDie/Public/UI",
-			"KillOrDie/Public/Weapons/Animations"
+			"KillOrDie/Public/Characters/Animations"
 		});
 
 		// Uncomment if you are using Slate UI

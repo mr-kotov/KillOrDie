@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapons/Animations/KODAnimNotify.h"
+#include "Characters/Animations/KODAnimNotify.h"
 #include "KODReloadFinishedAnimNotify.generated.h"
 
 /**

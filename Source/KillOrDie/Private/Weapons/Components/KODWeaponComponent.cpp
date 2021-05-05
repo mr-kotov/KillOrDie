@@ -6,7 +6,10 @@
 #include "KODEquipFinishedAnimNotify.h"
 #include "KODReloadFinishedAnimNotify.h"
 #include "Weapons/KODBaseWeapon.h"
+#include "Characters/Animations/AnimUtils.h"
 
+DEFINE_LOG_CATEGORY_STATIC(KODWeaponComponent, All, All);
+constexpr static int32 WeaponNum = 2;
 UKODWeaponComponent::UKODWeaponComponent() {
   PrimaryComponentTick.bCanEverTick = false;
 }
@@ -31,6 +34,7 @@ void UKODWeaponComponent::NextWeapon() {
 
 void UKODWeaponComponent::BeginPlay() {
   Super::BeginPlay();
+  checkf(WeaponData.Num() == WeaponNum, TEXT("Our character can hold only %i weapon items"), WeaponNum);
   InitAnimations();
   SpawnWeapons();
   EquipWeapon(CurrentWeaponIndex);
@@ -101,13 +105,19 @@ void UKODWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) {
 }
 
 void UKODWeaponComponent::InitAnimations() {
-  auto EquipFinishedNotify = FindNotifyByClass<UKODEquipFinishedAnimNotify>(EquipAnimMontage);
+  auto EquipFinishedNotify = AnimUtils::FindNotifyByClass<UKODEquipFinishedAnimNotify>(EquipAnimMontage);
   if(EquipFinishedNotify) {
     EquipFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnEquipFinished);
+  } else {
+    UE_LOG(KODWeaponComponent, Error, TEXT("Equip anim notify is forgotten to set"));
+    checkNoEntry();
   }
   for (auto OneWeaponData: WeaponData) {
-    auto ReloadFinishedNotify = FindNotifyByClass<UKODReloadFinishedAnimNotify>(OneWeaponData.ReloadAnimMontage);
-    if(!ReloadFinishedNotify) continue;
+    auto ReloadFinishedNotify = AnimUtils::FindNotifyByClass<UKODReloadFinishedAnimNotify>(OneWeaponData.ReloadAnimMontage);
+    if(!ReloadFinishedNotify) {
+      UE_LOG(KODWeaponComponent, Error, TEXT("Reload anim notify is forgotten to set"));
+      checkNoEntry();
+    };
     ReloadFinishedNotify->OnNotified.AddUObject(this, &UKODWeaponComponent::OnReloadFinished);
     
   }

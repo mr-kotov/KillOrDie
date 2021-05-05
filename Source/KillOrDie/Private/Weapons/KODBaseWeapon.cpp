@@ -15,6 +15,8 @@ AKODBaseWeapon::AKODBaseWeapon() {
 void AKODBaseWeapon::BeginPlay() {
   Super::BeginPlay();
   check(WeaponMesh);
+  checkf(DefaultAmmo.Bullets > 0, TEXT("Bullets count`t be less or equal zero"));
+  checkf(DefaultAmmo.Clips > 0, TEXT("Clips count`t be less or equal zero"));
   CurrentAmmo = DefaultAmmo;
 }
 

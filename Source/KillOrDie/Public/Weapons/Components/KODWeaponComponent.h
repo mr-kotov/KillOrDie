@@ -4,20 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "KODCoreTypes.h"
 #include "KODWeaponComponent.generated.h"
 
 class AKODBaseWeapon;
-
-USTRUCT(BlueprintType)
-struct FWeaponData {
-  GENERATED_BODY()
-  
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-  TSubclassOf<AKODBaseWeapon> WeaponClass;
-
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
-  UAnimMontage* ReloadAnimMontage;
-};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class KILLORDIE_API UKODWeaponComponent : public UActorComponent {
@@ -74,16 +64,4 @@ private:
 
   void OnEmptyClip();
   void ChangeClip();
-  
-  template<typename T> T* FindNotifyByClass(UAnimSequenceBase* Animation) {
-    if(!Animation) return nullptr;
-    const auto NotifyEvents = Animation->Notifies;
-    for (auto NotifyEvent: NotifyEvents) {
-      auto AnimNotify = Cast<T>(NotifyEvent.Notify);
-      if(AnimNotify) {
-        return AnimNotify;
-      }
-    }
-    return nullptr;
-  };
 };
