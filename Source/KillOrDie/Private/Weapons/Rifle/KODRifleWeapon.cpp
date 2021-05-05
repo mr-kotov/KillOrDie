@@ -5,8 +5,8 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 void AKODRifleWeapon::StartFire() {
-  MakeShot();
   GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AKODRifleWeapon::MakeShot, TimerBetweenShots, true, 0.2f);
+  MakeShot();
 }
 
 void AKODRifleWeapon::StopFire() {

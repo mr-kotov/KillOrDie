@@ -61,13 +61,14 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
 }
 
 void AKODBaseWeapon::DecreaseAmmo() {
-  if(CurrentAmmo.Clips == 0) {
+  if(CurrentAmmo.Bullets == 0) {
     return;
   }
   CurrentAmmo.Bullets--;
   LogAmmo();
 
   if(IsClipEmpty() && !IsAmmoEmpty()) {
+    StopFire();
     OnClipEmpty.Broadcast();
   }
 }
