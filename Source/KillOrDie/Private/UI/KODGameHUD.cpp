@@ -2,11 +2,22 @@
 
 #include "UI/KODGameHUD.h"
 
+
+#include "Blueprint/UserWidget.h"
 #include "Engine/Canvas.h"
 
 void AKODGameHUD::DrawHUD() {
   Super::DrawHUD();
   DrawCrossHair();
+}
+
+void AKODGameHUD::BeginPlay() {
+  Super::BeginPlay();
+
+  auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
+  if(PlayerHUDWidget) {
+    PlayerHUDWidget->AddToViewport();
+  }
 }
 
 void AKODGameHUD::DrawCrossHair() {

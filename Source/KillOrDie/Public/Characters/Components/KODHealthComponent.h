@@ -18,8 +18,11 @@ public:
   FOnDeath OnDeath;
   FOnHealthChanged OnHealthChanged;
 
-  UFUNCTION(BlueprintCallable)
+  UFUNCTION(BlueprintCallable, Category = "Health")
   bool IsDead() const {return FMath::IsNearlyZero(Health);};
+
+  UFUNCTION(BlueprintCallable, Category = "Health")
+  float GetHealthPercent() const {return Health / MaxHealth;}
   
   float GetHealth() const{return Health;}
 
@@ -41,7 +44,7 @@ protected:
   float HealDelay = 1.0f;
 
   /**Частота восстановления здоровья*/
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "1.0", ClampMax = "30.0", EditCondition = "AutoHeal"))
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.001", ClampMax = "30.0", EditCondition = "AutoHeal"))
   float HealUpdateFrequency = 2.0f;
   
   

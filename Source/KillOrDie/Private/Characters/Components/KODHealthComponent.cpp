@@ -13,7 +13,8 @@ UKODHealthComponent::UKODHealthComponent() {
 // Called when the game starts
 void UKODHealthComponent::BeginPlay() {
   Super::BeginPlay();
-  
+
+  check(MaxHealth > 0);
   SetHealth(MaxHealth);
   AActor* ComponentOwner = GetOwner();
   if(ComponentOwner) ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UKODHealthComponent::OnTakeAnyDamage);
