@@ -155,6 +155,15 @@ void UKODWeaponComponent::Reload() {
   ChangeClip();
 }
 
+bool UKODWeaponComponent::GetWeaponUIData(FWeaponUIData& UIData) const{
+  if(CurrentWeapon) {
+    UIData = CurrentWeapon->GetUIData();
+    return true;
+  }else {
+    return false;
+  }
+}
+
 void UKODWeaponComponent::OnEmptyClip() {
   ChangeClip();
 }

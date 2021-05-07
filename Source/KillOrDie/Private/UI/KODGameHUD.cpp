@@ -8,7 +8,7 @@
 
 void AKODGameHUD::DrawHUD() {
   Super::DrawHUD();
-  DrawCrossHair();
+  //DrawCrossHair();
 }
 
 void AKODGameHUD::BeginPlay() {

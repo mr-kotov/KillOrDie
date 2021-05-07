@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "KODBaseWeapon.h"
 #include "Components/ActorComponent.h"
 #include "KODCoreTypes.h"
 #include "KODWeaponComponent.generated.h"
@@ -21,6 +23,7 @@ public:
   void NextWeapon();
   void Reload();
 
+  bool GetWeaponUIData(FWeaponUIData& UIData) const;
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
   TArray<FWeaponData> WeaponData;
