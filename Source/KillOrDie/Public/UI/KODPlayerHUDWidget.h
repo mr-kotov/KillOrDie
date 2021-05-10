@@ -8,6 +8,7 @@
 #include "KODPlayerHUDWidget.generated.h"
 
 class UKODWeaponComponent;
+class UKODHealthComponent;
 
 UCLASS()
 class KILLORDIE_API UKODPlayerHUDWidget : public UUserWidget {
@@ -23,6 +24,13 @@ public:
   UFUNCTION(BlueprintCallable, Category = "UI")
   bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
+  UFUNCTION(BlueprintCallable, Category = "UI")
+  bool IsPlayerAlive() const;
+
+  UFUNCTION(BlueprintCallable, Category = "UI")
+  bool IsPlayerSpectating() const;
+
 private:
   UKODWeaponComponent* GetWeaponComponent() const;
+  UKODHealthComponent* GetHealthComponent() const;
 };

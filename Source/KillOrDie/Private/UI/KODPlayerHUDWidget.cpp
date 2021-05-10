@@ -5,11 +5,7 @@
 #include "Characters/Components/KODHealthComponent.h"
 
 float UKODPlayerHUDWidget::GetHealthPercent() const {
-  const auto Player = GetOwningPlayerPawn();
-  if(!Player) return  0.0f;
-
-  const auto Component = Player->GetComponentByClass(UKODHealthComponent::StaticClass());
-  const auto HealthComponent = Cast<UKODHealthComponent>(Component);
+  const auto HealthComponent = GetHealthComponent();
   if(!HealthComponent) return 0.0f;
 
   return HealthComponent->GetHealthPercent();
@@ -29,6 +25,16 @@ bool UKODPlayerHUDWidget::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const {
   return WeaponComponent->GetCurrentWeaponAmmoData(AmmoData);
 }
 
+bool UKODPlayerHUDWidget::IsPlayerAlive() const {
+  const auto HealthComponent = GetHealthComponent();
+  return HealthComponent && !HealthComponent->IsDead();
+}
+
+bool UKODPlayerHUDWidget::IsPlayerSpectating() const {
+  const auto Controller = GetOwningPlayer();
+  return Controller && Controller->GetStateName() == NAME_Spectating;
+}
+
 UKODWeaponComponent* UKODPlayerHUDWidget::GetWeaponComponent() const {
   const auto Player = GetOwningPlayerPawn();
   if(!Player) return nullptr;
@@ -36,4 +42,13 @@ UKODWeaponComponent* UKODPlayerHUDWidget::GetWeaponComponent() const {
   const auto Component = Player->GetComponentByClass(UKODWeaponComponent::StaticClass());
   const auto WeaponComponent = Cast<UKODWeaponComponent>(Component);
   return WeaponComponent;
+}
+
+UKODHealthComponent* UKODPlayerHUDWidget::GetHealthComponent() const {
+  const auto Player = GetOwningPlayerPawn();
+  if(!Player) return nullptr;
+
+  const auto Component = Player->GetComponentByClass(UKODHealthComponent::StaticClass());
+  const auto HealthComponent = Cast<UKODHealthComponent>(Component);
+  return HealthComponent;
 }
