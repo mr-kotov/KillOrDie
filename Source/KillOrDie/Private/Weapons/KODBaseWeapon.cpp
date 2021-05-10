@@ -67,8 +67,6 @@ void AKODBaseWeapon::DecreaseAmmo() {
     return;
   }
   CurrentAmmo.Bullets--;
-  LogAmmo();
-
   if(IsClipEmpty() && !IsAmmoEmpty()) {
     StopFire();
     OnClipEmpty.Broadcast();

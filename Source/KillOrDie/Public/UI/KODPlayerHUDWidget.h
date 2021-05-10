@@ -7,9 +7,6 @@
 #include "KODCoreTypes.h"
 #include "KODPlayerHUDWidget.generated.h"
 
-class UKODWeaponComponent;
-class UKODHealthComponent;
-
 UCLASS()
 class KILLORDIE_API UKODPlayerHUDWidget : public UUserWidget {
   GENERATED_BODY()
@@ -29,8 +26,4 @@ public:
 
   UFUNCTION(BlueprintCallable, Category = "UI")
   bool IsPlayerSpectating() const;
-
-private:
-  UKODWeaponComponent* GetWeaponComponent() const;
-  UKODHealthComponent* GetHealthComponent() const;
 };
