@@ -25,6 +25,7 @@ public:
   bool CanRealod() const;
 
   FWeaponUIData GetUIData() const {return UIData;}
+  FAmmoData GetAmmoData() const {return CurrentAmmo;}
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
   USkeletalMeshComponent* WeaponMesh;

@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "KODCoreTypes.h" 
+#include "KODCoreTypes.h"
 #include "KODPlayerHUDWidget.generated.h"
+
+class UKODWeaponComponent;
 
 UCLASS()
 class KILLORDIE_API UKODPlayerHUDWidget : public UUserWidget {
@@ -16,5 +18,11 @@ public:
   float GetHealthPercent() const;
 
   UFUNCTION(BlueprintCallable, Category = "UI")
-  bool GetWeaponUIData(FWeaponUIData& UIData) const;
+  bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
+  
+  UFUNCTION(BlueprintCallable, Category = "UI")
+  bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
+
+private:
+  UKODWeaponComponent* GetWeaponComponent() const;
 };
