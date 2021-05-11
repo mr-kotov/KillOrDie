@@ -90,7 +90,6 @@ void AKODBaseWeapon::ChangeClip() {
     CurrentAmmo.Clips--;
   }
   CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-  UE_LOG(LogBaseWeapon, Warning, TEXT("------CLips------"));
 }
 
 bool AKODBaseWeapon::CanRealod() const {
@@ -100,7 +99,6 @@ bool AKODBaseWeapon::CanRealod() const {
 void AKODBaseWeapon::LogAmmo() {
   FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + " / ";
   AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
-  UE_LOG(LogBaseWeapon, Warning, TEXT("%s"), *AmmoInfo);
 }
 
 void AKODBaseWeapon::StartFire() {
