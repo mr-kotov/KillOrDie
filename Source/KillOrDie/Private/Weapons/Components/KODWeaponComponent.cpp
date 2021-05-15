@@ -173,8 +173,29 @@ bool UKODWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const {
   }
 }
 
-void UKODWeaponComponent::OnEmptyClip() {
-  ChangeClip();
+bool UKODWeaponComponent::TryToAddAmmo(TSubclassOf<AKODBaseWeapon> WeaponType,
+    int32 ClipsAmount) {
+  for (const auto Weapon: Weapons) {
+    if(Weapon && Weapon->IsA(WeaponType)) {
+      return Weapon->TryToAddAmmo(ClipsAmount);
+    }
+  }
+  return false;
+}
+
+void UKODWeaponComponent::OnEmptyClip(AKODBaseWeapon* AmmoEmptyWeapon) {
+  if(!AmmoEmptyWeapon) return;
+  
+  if(CurrentWeapon == AmmoEmptyWeapon) {
+    ChangeClip();  
+  }else {
+    for (const auto Weapon: Weapons) {
+      if(Weapon == AmmoEmptyWeapon) {
+        Weapon->ChangeClip();
+      }
+    }
+  }
+  
 }
 
 void UKODWeaponComponent::ChangeClip() {

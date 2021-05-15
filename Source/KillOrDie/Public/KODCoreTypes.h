@@ -3,7 +3,7 @@
 //Weapon
 class AKODBaseWeapon;
 
-DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, AKODBaseWeapon*);
 
 USTRUCT(BlueprintType)
 struct FAmmoData {
