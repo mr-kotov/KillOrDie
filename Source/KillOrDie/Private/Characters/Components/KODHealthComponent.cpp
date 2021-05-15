@@ -11,7 +11,7 @@ UKODHealthComponent::UKODHealthComponent() {
 }
 
 bool UKODHealthComponent::TryToAddHealthCond(float PickupHealAmount) {
-  if(IsDead() || IsHealthFull) return false;
+  if(IsDead() || IsHealthFull()) return false;
   SetHealth(Health + PickupHealAmount);
   return true;
 }
