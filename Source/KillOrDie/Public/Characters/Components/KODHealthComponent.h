@@ -25,7 +25,9 @@ public:
   float GetHealthPercent() const {return Health / MaxHealth;}
   
   float GetHealth() const{return Health;}
-
+  
+  bool TryToAddHealthCond(float PickupHealAmount);
+  bool IsHealthFull() const;
 protected:
   /**Максимальное здоровье*/
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health", meta = (ClampMin = "0.0", ClampMax = "1000.0"))

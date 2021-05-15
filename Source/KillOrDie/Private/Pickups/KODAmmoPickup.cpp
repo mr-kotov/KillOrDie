@@ -1,7 +1,6 @@
 // Kill or Die
 
 #include "Pickups/KODAmmoPickup.h"
-#include "KODBaseWeapon.h"
 #include "KODHealthComponent.h"
 #include "KODUtils.h"
 #include "Components/KODWeaponComponent.h"

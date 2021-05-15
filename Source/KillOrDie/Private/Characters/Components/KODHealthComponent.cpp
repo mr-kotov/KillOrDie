@@ -10,6 +10,16 @@ UKODHealthComponent::UKODHealthComponent() {
     PrimaryComponentTick.bCanEverTick = false;
 }
 
+bool UKODHealthComponent::TryToAddHealthCond(float PickupHealAmount) {
+  if(IsDead() || IsHealthFull) return false;
+  SetHealth(Health + PickupHealAmount);
+  return true;
+}
+
+bool UKODHealthComponent::IsHealthFull() const {
+  return FMath::IsNearlyEqual(Health, MaxHealth);
+}
+
 // Called when the game starts
 void UKODHealthComponent::BeginPlay() {
   Super::BeginPlay();
@@ -40,7 +50,7 @@ void UKODHealthComponent::OnTakeAnyDamage(AActor* DamagedActor,
 
 void UKODHealthComponent::OnTimerRecoveryHealth() {
   SetHealth(Health + HealAmount);
-  if(FMath::IsNearlyEqual(Health, MaxHealth))
+  if(IsHealthFull() && GetWorld())
     OnTimerRecoveryHealthEnd();
 }
 
