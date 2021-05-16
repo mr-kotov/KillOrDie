@@ -50,6 +50,7 @@ void AKODBaseCharacter::BeginPlay() {
   check(HealthComponent);
   check(HealthTextComponent);
   check(GetCharacterMovement());
+  check(GetMesh());
 
   OnHealthChanged(HealthComponent->GetHealth());
   HealthComponent->OnDeath.AddUObject(this, &AKODBaseCharacter::OnDeath);
@@ -137,7 +138,7 @@ void AKODBaseCharacter::OnStopRunning() {
 void AKODBaseCharacter::OnDeath() {
   UE_LOG(LogBaseCharacter, Warning, TEXT("Player %s is dead"), *GetName());
 
-  PlayAnimMontage(DeathAnimMontage);
+  //PlayAnimMontage(DeathAnimMontage);
   GetCharacterMovement()->DisableMovement();
   SetLifeSpan(LifeSpanOnDeath);
   if (Controller) {
@@ -146,6 +147,9 @@ void AKODBaseCharacter::OnDeath() {
   GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
   HealthTextComponent->SetVisibility(false);
   WeaponComponent->StopFire();
+
+  GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+  GetMesh()->SetSimulatePhysics(true);
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health) {
