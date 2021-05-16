@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "KODCoreTypes.h"
 #include "KODWeaponFXComponent.generated.h"
 
 class UNiagaraSystem;
@@ -20,8 +21,8 @@ public:
 
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-  UNiagaraSystem* DefaultEffect;
+  FImpactData DefaultEffectData;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-  TMap<UPhysicalMaterial*, UNiagaraSystem*> EffectsMap;
+  TMap<UPhysicalMaterial*, FImpactData> ImpactDataMap;
 };
