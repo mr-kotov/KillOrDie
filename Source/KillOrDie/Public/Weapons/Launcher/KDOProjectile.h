@@ -10,6 +10,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class UKODWeaponFXComponent;
 
 UCLASS()
 class KILLORDIE_API AKDOProjectile : public AActor {
@@ -37,6 +38,9 @@ protected:
 
   UPROPERTY(EditDefaultsOnly, Category = "Weapon")
   float LifeSeconds = 5.0f;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
+  UKODWeaponFXComponent* WeaponFXComponent;
   
   virtual void BeginPlay() override;
 

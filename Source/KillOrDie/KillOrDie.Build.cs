@@ -8,7 +8,10 @@ public class KillOrDie : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] {"Core", "CoreUObject", "Engine", "InputCore"});
+		PublicDependencyModuleNames.AddRange(new string[]
+		{
+			"Core", "CoreUObject", "Engine", "InputCore", "Niagara", "PhysicsCore"
+		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
@@ -21,6 +24,7 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/Weapons",
 			"KillOrDie/Public/Weapons/Launcher",
 			"KillOrDie/Public/Weapons/Rifle",
+			"KillOrDie/Public/Weapons/Components",
 			"KillOrDie/Public/UI",
 			"KillOrDie/Public/Characters/Animations",
 			"KillOrDie/Public/UI",

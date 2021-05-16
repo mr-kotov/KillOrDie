@@ -59,6 +59,7 @@ void AKODBaseWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart,
     const FVector& TraceEnd) {
   FCollisionQueryParams CollisionParams;
   CollisionParams.AddIgnoredActor(GetOwner());
+  CollisionParams.bReturnPhysicalMaterial = true;
   GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 }
 

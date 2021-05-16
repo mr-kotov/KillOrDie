@@ -1,9 +1,20 @@
 // Kill or Die
 
 #include "Weapons/Rifle/KODRifleWeapon.h"
+#include "Weapons/Components/KODWeaponFXComponent.h"
 #include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
+
+AKODRifleWeapon::AKODRifleWeapon() {
+  WeaponFXComponent = CreateDefaultSubobject<UKODWeaponFXComponent>("WeaponFXComponent");
+}
+void AKODRifleWeapon::BeginPlay() {
+  Super::BeginPlay();
+
+  check(WeaponFXComponent);
+}
+
 void AKODRifleWeapon::StartFire() {
   GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AKODRifleWeapon::MakeShot, TimerBetweenShots, true, 0.2f);
   MakeShot();
@@ -30,8 +41,9 @@ void AKODRifleWeapon::MakeShot() {
   
   if(HitResult.bBlockingHit) {
     MakeDamage(HitResult);
-    DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 3.0f);
-    DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 1.0f);
+    //DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 1.0f, 0, 3.0f);
+    //DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 1.0f);
+    WeaponFXComponent->PlayImpactFX(HitResult);
   } else {
     DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Blue, false, 3.0f, 0, 5.0f);
   }
