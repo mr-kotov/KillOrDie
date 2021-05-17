@@ -52,7 +52,7 @@ void AKODBaseCharacter::BeginPlay() {
   check(GetCharacterMovement());
   check(GetMesh());
 
-  OnHealthChanged(HealthComponent->GetHealth());
+  OnHealthChanged(HealthComponent->GetHealth(), 0.0f);
   HealthComponent->OnDeath.AddUObject(this, &AKODBaseCharacter::OnDeath);
   HealthComponent->OnHealthChanged.AddUObject(
       this, &AKODBaseCharacter::OnHealthChanged);
@@ -152,7 +152,7 @@ void AKODBaseCharacter::OnDeath() {
   GetMesh()->SetSimulatePhysics(true);
 }
 
-void AKODBaseCharacter::OnHealthChanged(float Health) {
+void AKODBaseCharacter::OnHealthChanged(float Health, float HealthDelta) {
   HealthTextComponent->SetText(
       FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

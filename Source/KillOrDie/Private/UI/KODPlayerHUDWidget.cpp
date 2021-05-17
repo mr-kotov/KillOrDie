@@ -35,3 +35,17 @@ bool UKODPlayerHUDWidget::IsPlayerSpectating() const {
   const auto Controller = GetOwningPlayer();
   return Controller && Controller->GetStateName() == NAME_Spectating;
 }
+
+bool UKODPlayerHUDWidget::Initialize() {
+  const auto HealthComponent = KODUtils::GetKODPlayerComponent<UKODHealthComponent>(GetOwningPlayerPawn());
+  if(HealthComponent) {
+    HealthComponent->OnHealthChanged.AddUObject(this, &UKODPlayerHUDWidget::OnHealthChanged);
+  }
+  return Super::Initialize();
+}
+
+void UKODPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta) {
+  if(HealthDelta < 0.0f) {
+    OnTakeDamage();  
+  }
+}

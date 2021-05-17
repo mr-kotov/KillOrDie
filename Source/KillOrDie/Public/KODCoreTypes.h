@@ -44,7 +44,7 @@ struct FWeaponUIData {
 //health
 //оповещение умерли или нет
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, float);
 
 /**VFX*/
 class UNiagaraSystem;
