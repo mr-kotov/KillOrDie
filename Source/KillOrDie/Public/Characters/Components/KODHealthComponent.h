@@ -7,6 +7,8 @@
 #include "KODCoreTypes.h"
 #include "KODHealthComponent.generated.h"
 
+class UCameraShakeBase;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class KILLORDIE_API UKODHealthComponent : public UActorComponent {
   GENERATED_BODY()
@@ -48,7 +50,9 @@ protected:
   /**Частота восстановления здоровья*/
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.001", ClampMax = "30.0", EditCondition = "AutoHeal"))
   float HealUpdateFrequency = 2.0f;
-  
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+  TSubclassOf<UCameraShakeBase> CameraShake;
   
   virtual void BeginPlay() override;
 
@@ -62,4 +66,6 @@ private:
   void OnTimerRecoveryHealth();
   void OnTimerRecoveryHealthEnd();
   void SetHealth(float NewHealth);
+
+  void PlayCameraShake();
 };

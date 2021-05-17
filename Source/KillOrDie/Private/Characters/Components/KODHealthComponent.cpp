@@ -46,6 +46,7 @@ void UKODHealthComponent::OnTakeAnyDamage(AActor* DamagedActor,
   } else if(AutoHeal && GetWorld()) {
     GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this, &UKODHealthComponent::OnTimerRecoveryHealth, HealUpdateFrequency, true, HealDelay);
   }
+  PlayCameraShake();
 }
 
 void UKODHealthComponent::OnTimerRecoveryHealth() {
@@ -62,4 +63,16 @@ void UKODHealthComponent::OnTimerRecoveryHealthEnd() {
 void UKODHealthComponent::SetHealth(float NewHealth) {
   Health = FMath::Clamp(NewHealth, 0.0f, MaxHealth);
   OnHealthChanged.Broadcast(Health);
+}
+
+void UKODHealthComponent::PlayCameraShake() {
+  if(IsDead()) return;
+
+  const auto Player = Cast<APawn>(GetOwner());
+  if(!Player) return;
+
+  const auto Controller = Player->GetController<APlayerController>();
+  if(!Controller || !Controller->PlayerCameraManager) return;
+
+  Controller->PlayerCameraManager->StartCameraShake(CameraShake);
 }
