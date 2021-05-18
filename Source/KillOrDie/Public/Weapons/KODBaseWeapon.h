@@ -8,6 +8,8 @@
 #include "KODBaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 UCLASS()
 class KILLORDIE_API AKODBaseWeapon : public AActor {
@@ -46,6 +48,9 @@ protected:
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="UI")
   FWeaponUIData UIData;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
+  UNiagaraSystem* MuzzleFX; 
   
   APlayerController* GetPlayerController() const;
   
@@ -62,6 +67,7 @@ protected:
   bool IsClipEmpty() const;
   void LogAmmo();
   bool IsAmmoFull() const;
+  UNiagaraComponent* SpawnMuzzleFX();
 private:
   FAmmoData CurrentAmmo;  
 };

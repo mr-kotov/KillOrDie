@@ -3,6 +3,8 @@
 #include "Weapons/KODBaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseWeapon, All, All);
 
@@ -123,6 +125,15 @@ void AKODBaseWeapon::LogAmmo() {
 
 bool AKODBaseWeapon::IsAmmoFull() const {
   return CurrentAmmo.Clips == DefaultAmmo.Clips && CurrentAmmo.Bullets == DefaultAmmo.Bullets;
+}
+
+UNiagaraComponent* AKODBaseWeapon::SpawnMuzzleFX() {
+  return UNiagaraFunctionLibrary::SpawnSystemAttached(MuzzleFX,
+    WeaponMesh,
+    MuzzleSocketName,
+    FVector::ZeroVector,
+    FRotator::ZeroRotator,
+    EAttachLocation::SnapToTarget, true);
 }
 
 void AKODBaseWeapon::StartFire() {

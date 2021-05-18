@@ -3,6 +3,7 @@
 #include "Weapons/Rifle/KODRifleWeapon.h"
 #include "Weapons/Components/KODWeaponFXComponent.h"
 #include "DrawDebugHelpers.h"
+#include "NiagaraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRifleWeapon, All, All);
 
@@ -16,12 +17,14 @@ void AKODRifleWeapon::BeginPlay() {
 }
 
 void AKODRifleWeapon::StartFire() {
+  InitMuzzleFX();
   GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &AKODRifleWeapon::MakeShot, TimerBetweenShots, true, 0.2f);
   MakeShot();
 }
 
 void AKODRifleWeapon::StopFire() {
   GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+  SetMuzzleFXVisibility(false);
 }
 
 void AKODRifleWeapon::MakeShot() {
@@ -70,4 +73,18 @@ void AKODRifleWeapon::MakeDamage(const FHitResult& HitResult) {
   const auto DamgeActor = HitResult.GetActor();
   if(!DamgeActor) return;
   DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
+}
+
+void AKODRifleWeapon::InitMuzzleFX() {
+  if(!MuzzleFXComponent) {
+    MuzzleFXComponent = SpawnMuzzleFX();
+  }
+  SetMuzzleFXVisibility(true);
+}
+
+void AKODRifleWeapon::SetMuzzleFXVisibility(bool Visible) {
+  if(MuzzleFXComponent) {
+    MuzzleFXComponent->SetPaused(!Visible);
+    MuzzleFXComponent->SetVisibility(Visible, true);
+  }
 }
