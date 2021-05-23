@@ -10,7 +10,14 @@ public class KillOrDie : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "Niagara", "PhysicsCore"
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"Niagara", 
+			"PhysicsCore",
+			"GameplayTasks",
+			"NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
@@ -28,7 +35,9 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/UI",
 			"KillOrDie/Public/Characters/Animations",
 			"KillOrDie/Public/UI",
-			"KillOrDie/Public/Pickups"
+			"KillOrDie/Public/Pickups",
+			"KillOrDie/Public/AI",
+			"KillOrDie/Public/AI/Tasks"
 		});
 
 		// Uncomment if you are using Slate UI

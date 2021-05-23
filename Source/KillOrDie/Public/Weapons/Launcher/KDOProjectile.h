@@ -47,7 +47,7 @@ protected:
   bool DoFullDamage = false;
 
   UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-  float LifeSeconds = 2.0f;
+  float LifeSeconds = 3.0f;
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
   UKODWeaponFXComponent* WeaponFXComponent;
