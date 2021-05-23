@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapons/Components/KODWeaponFXComponent.h"
+#include "NiagaraComponent.h"
 
 AKDOProjectile::AKDOProjectile() {
   PrimaryActorTick.bCanEverTick = false;
@@ -16,6 +17,17 @@ AKDOProjectile::AKDOProjectile() {
   CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
   CollisionComponent->bReturnMaterialOnMove = true;
   SetRootComponent(CollisionComponent);
+
+  ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>("ProjectileMesh");
+  ProjectileMesh->SetupAttachment(RootComponent);
+  
+  EffectTraceSmokeComponent = CreateDefaultSubobject<UNiagaraComponent>("EffectTraceSmoke");
+  EffectTraceSmokeComponent->SetupAttachment(RootComponent);
+  
+  EffectTraceComponent = CreateDefaultSubobject<UNiagaraComponent>("EffectTrace");
+  EffectTraceComponent->SetupAttachment(RootComponent);  
+
+   
 
   MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
   MovementComponent->InitialSpeed = 2000.0f;
@@ -36,6 +48,7 @@ void AKDOProjectile::BeginPlay() {
   MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
   CollisionComponent->IgnoreActorWhenMoving(GetOwner(), true);
   CollisionComponent->OnComponentHit.AddDynamic(this, &AKDOProjectile::OnProjectileHit);
+
   /**Самоликвидация через 5 сек*/
   SetLifeSpan(LifeSeconds);
 }
@@ -59,7 +72,11 @@ void AKDOProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent,
 
   //DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
   WeaponFXComponent->PlayImpactFX(Hit);
-  Destroy();
+  //SetActorHiddenInGame(true);
+  SetActorEnableCollision(false);
+  EffectTraceComponent->SetVisibility(false);
+  ProjectileMesh->SetVisibility(false);
+  //Destroy();
 }
 
 AController* AKDOProjectile::GetController() const {

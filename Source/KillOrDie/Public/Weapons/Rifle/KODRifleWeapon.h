@@ -8,6 +8,7 @@
 
 class UKODWeaponFXComponent;
 class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class KILLORDIE_API AKODRifleWeapon : public AKODBaseWeapon {
@@ -32,6 +33,12 @@ protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
   UKODWeaponFXComponent* WeaponFXComponent;
 
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+  UNiagaraSystem* TraceFX;
+  
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+  FString TraceTargetName = "TraceTarget";
+
   virtual void BeginPlay() override;
   virtual void MakeShot() override;
   virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
@@ -46,4 +53,5 @@ private:
 
   void InitMuzzleFX();
   void SetMuzzleFXVisibility(bool Visible);
+  void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
 };

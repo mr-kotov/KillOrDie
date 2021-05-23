@@ -11,6 +11,7 @@
 class USphereComponent;
 class UProjectileMovementComponent;
 class UKODWeaponFXComponent;
+class UNiagaraComponent;
 
 UCLASS()
 class KILLORDIE_API AKDOProjectile : public AActor {
@@ -21,11 +22,20 @@ public:
 
   void SetShotDirection(const FVector& Direction){ShotDirection = Direction;};
 protected:
-  UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+  UPROPERTY(VisibleDefaultsOnly, Category = "Components")
   USphereComponent* CollisionComponent;
 
-  UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
+  UStaticMeshComponent* ProjectileMesh;
+  
+  UPROPERTY(VisibleDefaultsOnly, Category = "Components")
   UProjectileMovementComponent* MovementComponent;
+
+  UPROPERTY(VisibleDefaultsOnly, Category = "VFX")
+  UNiagaraComponent* EffectTraceComponent;
+
+  UPROPERTY(VisibleDefaultsOnly, Category = "VFX")
+  UNiagaraComponent* EffectTraceSmokeComponent;
 
   UPROPERTY(EditDefaultsOnly, Category = "Weapon")
   float DamageRadius = 200.0f;
@@ -37,7 +47,7 @@ protected:
   bool DoFullDamage = false;
 
   UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-  float LifeSeconds = 5.0f;
+  float LifeSeconds = 2.0f;
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
   UKODWeaponFXComponent* WeaponFXComponent;

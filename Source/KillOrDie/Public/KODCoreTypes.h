@@ -76,3 +76,4 @@ struct FImpactData {
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
   FDecalData DecalData;
 };
+
