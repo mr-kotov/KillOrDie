@@ -9,5 +9,6 @@
 UCLASS()
 class KILLORDIE_API AKDOAIController : public AAIController {
   GENERATED_BODY()
-
+protected:
+  virtual void OnPossess(APawn* InPawn) override;
 };
