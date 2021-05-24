@@ -12,6 +12,7 @@ UKODNextLocationTask::UKODNextLocationTask() {
 
 EBTNodeResult::Type UKODNextLocationTask::ExecuteTask(
     UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
+  UE_LOG(LogTemp, Warning, TEXT("ExecuteTask"));
   const auto Controller = OwnerComp.GetAIOwner();
   const auto Blackboard = OwnerComp.GetBlackboardComponent();
 
@@ -28,5 +29,6 @@ EBTNodeResult::Type UKODNextLocationTask::ExecuteTask(
   if(!Found) return EBTNodeResult::Failed;
 
   Blackboard->SetValueAsVector(AimLocationKey.SelectedKeyName, NavLocation.Location);
+  UE_LOG(LogTemp, Warning, TEXT("ExecuteTask"));
   return EBTNodeResult::Succeeded;
 }
