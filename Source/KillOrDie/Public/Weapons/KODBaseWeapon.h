@@ -30,6 +30,7 @@ public:
   FAmmoData GetAmmoData() const {return CurrentAmmo;}
 
   bool TryToAddAmmo(int32 ClipsAmount);
+  bool IsAmmoEmpty() const;
   
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Components")
@@ -63,7 +64,7 @@ protected:
   FVector GetMuzzleWorldLocation() const;
   void MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd);
   void DecreaseAmmo();
-  bool IsAmmoEmpty() const;
+  
   bool IsClipEmpty() const;
   void LogAmmo();
   bool IsAmmoFull() const;

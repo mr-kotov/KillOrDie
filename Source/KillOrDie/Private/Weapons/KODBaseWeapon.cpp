@@ -33,9 +33,17 @@ APlayerController* AKODBaseWeapon::GetPlayerController() const {
 }
 
 bool AKODBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const {
-  const auto Controller = GetPlayerController();
-  if(!Controller) return false;
-  Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+  const auto KODCharecter = Cast<ACharacter>(GetOwner());
+  if(!KODCharecter) return false;
+
+  if(KODCharecter->IsPlayerControlled()) {
+    const auto Controller = GetPlayerController();
+    if(!Controller) return false;
+    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+  } else {
+    ViewLocation = GetMuzzleWorldLocation();
+    ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+  }
   return true;
 }
 

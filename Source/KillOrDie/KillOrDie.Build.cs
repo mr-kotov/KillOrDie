@@ -38,7 +38,10 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/Pickups",
 			"KillOrDie/Public/AI",
 			"KillOrDie/Public/AI/Tasks",
-			"KillOrDie/Public/AI/Components"
+			"KillOrDie/Public/AI/Components",
+			"KillOrDie/Public/AI/Services",
+			"KillOrDie/Public/AI/EQS",
+			"KillOrDie/Public/AI/Decorators"
 		});
 
 		// Uncomment if you are using Slate UI

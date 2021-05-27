@@ -4,6 +4,7 @@
 
 #include "AI/KODAICharacter.h"
 #include "AI/Components/KODAIPerceptionComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AKDOAIController::AKDOAIController() {
   KODAIPerceptionComponent = CreateDefaultSubobject<UKODAIPerceptionComponent>("KODPerceptionComponent");
@@ -21,6 +22,11 @@ void AKDOAIController::OnPossess(APawn* InPawn) {
 
 void AKDOAIController::Tick(float DeltaSeconds) {
   Super::Tick(DeltaSeconds);
-  const auto AimActor = KODAIPerceptionComponent->GetClosestEnemy();
+  const auto AimActor = GetFocusActor();
   SetFocus(AimActor);
+}
+
+AActor* AKDOAIController::GetFocusActor() const {
+  if(!GetBlackboardComponent()) return nullptr;
+  return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName));
 }

@@ -2,10 +2,14 @@
 
 #include "AI/KODAICharacter.h"
 
+
+#include "BrainComponent.h"
 #include "KDOAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Weapons/Components/KODAIWeaponComponent.h"
 
-AKODAICharacter::AKODAICharacter(const FObjectInitializer& ObjInit):Super(ObjInit) {
+AKODAICharacter::AKODAICharacter(const FObjectInitializer& ObjInit):Super(
+      ObjInit.SetDefaultSubobjectClass<UKODAIWeaponComponent>("WeaponComponent")) {
   AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
   AIControllerClass = AKDOAIController::StaticClass();
 
@@ -13,5 +17,14 @@ AKODAICharacter::AKODAICharacter(const FObjectInitializer& ObjInit):Super(ObjIni
   if(GetCharacterMovement()) {
     GetCharacterMovement()->bUseControllerDesiredRotation = true;
     GetCharacterMovement()->RotationRate = FRotator(0.0f, 200.0f, 0.0f);
+  }
+}
+
+void AKODAICharacter::OnDeath() {
+  Super::OnDeath();
+
+  const auto KODController = Cast<AAIController>(Controller);
+  if(KODController && KODController->BrainComponent) {
+    KODController->BrainComponent->Cleanup();
   }
 }
