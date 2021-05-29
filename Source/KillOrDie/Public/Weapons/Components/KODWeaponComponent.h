@@ -27,6 +27,8 @@ public:
   bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
   bool TryToAddAmmo(TSubclassOf<AKODBaseWeapon> WeaponType, int32 ClipsAmount);
+
+  bool NeedAmmo(TSubclassOf<AKODBaseWeapon> WeaponType);
   
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")

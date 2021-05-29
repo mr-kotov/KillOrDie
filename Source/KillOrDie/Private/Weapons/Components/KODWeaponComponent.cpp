@@ -183,6 +183,15 @@ bool UKODWeaponComponent::TryToAddAmmo(TSubclassOf<AKODBaseWeapon> WeaponType,
   return false;
 }
 
+bool UKODWeaponComponent::NeedAmmo(TSubclassOf<AKODBaseWeapon> WeaponType) {
+  for (const auto Weapon: Weapons) {
+    if(Weapon && Weapon->IsA(WeaponType)) {
+      return !Weapon->IsAmmoFull();
+    }
+  }
+  return false;
+}
+
 void UKODWeaponComponent::OnEmptyClip(AKODBaseWeapon* AmmoEmptyWeapon) {
   if(!AmmoEmptyWeapon) return;
   
