@@ -32,6 +32,10 @@ void AKODBasePickup::Tick(float DeltaTime) {
 
 }
 
+bool AKODBasePickup::CouldBeTaken() const {
+  return !GetWorldTimerManager().IsTimerActive(RespawnTimerHandle);
+}
+
 bool AKODBasePickup::GivePickupTo(APawn* PlayerPawn) {
   return false;
 }
@@ -41,8 +45,6 @@ void AKODBasePickup::PickupWasTaken() {
   if(GetRootComponent()) {
     GetRootComponent()->SetVisibility(false, true);  
   }
-
-  FTimerHandle RespawnTimerHandle;
   GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &AKODBasePickup::Respawn, RespawnTime);
 }
 

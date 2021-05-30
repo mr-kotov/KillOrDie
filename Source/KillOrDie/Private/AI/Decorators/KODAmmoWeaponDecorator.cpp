@@ -20,6 +20,5 @@ bool UKODAmmoWeaponDecorator::CalculateRawConditionValue(
 
   const auto WeaponComponent = KODUtils::GetKODPlayerComponent<UKODWeaponComponent>(Controller->GetPawn());
   if(!WeaponComponent) return false;
-
   return WeaponComponent->NeedAmmo(WeaponType);
 }
