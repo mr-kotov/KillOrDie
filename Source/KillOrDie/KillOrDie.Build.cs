@@ -27,6 +27,7 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/Characters",
 			"KillOrDie/Public/Characters/Components",
 			"KillOrDie/Public/GameModes",
+			"KillOrDie/Public/Player",
 			"KillOrDie/Public/Dev",
 			"KillOrDie/Public/Weapons",
 			"KillOrDie/Public/Weapons/Launcher",

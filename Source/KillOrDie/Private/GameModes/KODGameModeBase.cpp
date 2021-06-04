@@ -5,7 +5,7 @@
 
 #include "KODGameHUD.h"
 #include "Characters/KODBaseCharacter.h"
-#include "GameModes/KODPlayerController.h"
+#include "Player/KODPlayerController.h"
 #include "AIController.h"
 #include "KODPlayerState.h"
 

@@ -1,6 +1,6 @@
 // Kill or Die
 
-#include "GameModes/KODPlayerState.h"
+#include "Player/KODPlayerState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogKODPlayerState, All, All);
 

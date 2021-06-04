@@ -1,6 +1,6 @@
 // Kill or Die
 
-#include "AI/KDOAIController.h"
+#include "Player/KDOAIController.h"
 
 #include "AI/KODAICharacter.h"
 #include "AI/Components/KODAIPerceptionComponent.h"
