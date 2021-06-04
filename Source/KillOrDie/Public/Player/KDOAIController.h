@@ -7,6 +7,7 @@
 #include "KDOAIController.generated.h"
 
 class UKODAIPerceptionComponent;
+class UKODRespawnComponent;
 UCLASS()
 class KILLORDIE_API AKDOAIController : public AAIController {
   GENERATED_BODY()
@@ -18,6 +19,9 @@ protected:
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
   FName FocusOnKeyName = "EnemyActor";
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+  UKODRespawnComponent* RespawnComponent;
   
   virtual void OnPossess(APawn* InPawn) override;
   virtual void Tick(float DeltaSeconds) override;

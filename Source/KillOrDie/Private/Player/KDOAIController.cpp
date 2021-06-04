@@ -5,11 +5,14 @@
 #include "AI/KODAICharacter.h"
 #include "AI/Components/KODAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Player/Components/KODRespawnComponent.h"
 
 AKDOAIController::AKDOAIController() {
   KODAIPerceptionComponent = CreateDefaultSubobject<UKODAIPerceptionComponent>("KODPerceptionComponent");
   SetPerceptionComponent(*KODAIPerceptionComponent);
   bWantsPlayerState = true;
+
+  RespawnComponent = CreateDefaultSubobject<UKODRespawnComponent>("RespawnComponent");
 }
 
 void AKDOAIController::OnPossess(APawn* InPawn) {

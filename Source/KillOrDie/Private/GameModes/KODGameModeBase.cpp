@@ -8,8 +8,12 @@
 #include "Player/KODPlayerController.h"
 #include "AIController.h"
 #include "KODPlayerState.h"
+#include "KODUtils.h"
+#include "Components/KODRespawnComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogKODGameModeBase, All, All);
+
+constexpr static int32 MinRoundTimeForRespawn = 10;
 
 AKODGameModeBase::AKODGameModeBase() {
   DefaultPawnClass = AKODBaseCharacter::StaticClass();
@@ -47,6 +51,11 @@ void AKODGameModeBase::Killed(AController* KillerController,
   if(VictimPlayerState) {
     VictimPlayerState->AddDeath();
   }
+  StartRespawn(VictimController);
+}
+
+void AKODGameModeBase::RespawnRequest(AController* Controller) {
+  ResetOnePlayer(Controller);
 }
 
 void AKODGameModeBase::SpawnBots() {
@@ -146,4 +155,14 @@ void AKODGameModeBase::LogPlayerInfo() {
 
     PlayerState->LogInfo();
   }
+}
+
+void AKODGameModeBase::StartRespawn(AController* Controller) {
+  const auto RespawnAvailable = RoundCountDown > MinRoundTimeForRespawn + GameData.RespawnTime;
+  if(!RespawnAvailable) return;
+  
+  const auto RespawnComponent = KODUtils::GetKODPlayerComponent<UKODRespawnComponent>(Controller);
+  if(!RespawnComponent) return;
+
+  RespawnComponent->Respawn(GameData.RespawnTime);
 }
