@@ -72,7 +72,7 @@ GetTraceData(FVector& TraceStart, FVector& TraceEnd) const {
 void AKODRifleWeapon::MakeDamage(const FHitResult& HitResult) {
   const auto DamgeActor = HitResult.GetActor();
   if(!DamgeActor) return;
-  DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetPlayerController(), this);
+  DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetController(), this);
 }
 
 void AKODRifleWeapon::InitMuzzleFX() {
@@ -95,4 +95,9 @@ void AKODRifleWeapon::SpawnTraceFX(const FVector& TraceStart,
   if(TraceFXComponent) {
     TraceFXComponent->SetNiagaraVariableVec3(TraceTargetName, TraceEnd);
   }
+}
+
+AController* AKODRifleWeapon::GetController() const {
+  const auto Pawn = Cast<APawn>(GetOwner());
+  return Pawn ? Pawn->GetController() : nullptr;
 }

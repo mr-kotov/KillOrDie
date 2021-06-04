@@ -22,7 +22,10 @@ AActor* UKODAIPerceptionComponent::GetClosestEnemy() const {
   AActor* BestPawn = nullptr;
   for (const auto PerceiveActor: PerceiveActors) {
     const auto HealthComponent = KODUtils::GetKODPlayerComponent<UKODHealthComponent>(PerceiveActor);
-    if(HealthComponent && !HealthComponent->IsDead()) //TODO: check if enemies or not
+    const auto PercievePawn = Cast<APawn>(PerceiveActor);
+    const auto AreEnemies = PercievePawn && KODUtils::AreEnemies(Controller, PercievePawn->Controller);
+    
+    if(HealthComponent && !HealthComponent->IsDead() && AreEnemies)
     {
       const auto CurrentDistance = (PerceiveActor->GetActorLocation() - Pawn->GetActorLocation()).Size();
       if(CurrentDistance < BestDistance) {

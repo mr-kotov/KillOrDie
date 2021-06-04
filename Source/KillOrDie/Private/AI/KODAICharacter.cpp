@@ -10,7 +10,7 @@
 
 AKODAICharacter::AKODAICharacter(const FObjectInitializer& ObjInit):Super(
       ObjInit.SetDefaultSubobjectClass<UKODAIWeaponComponent>("WeaponComponent")) {
-  AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+  AutoPossessAI = EAutoPossessAI::Disabled;
   AIControllerClass = AKDOAIController::StaticClass();
 
   bUseControllerRotationYaw = false;

@@ -108,6 +108,13 @@ float AKODBaseCharacter::GetMovementDirection() const {
   //домножаем на знак координаты Z
 }
 
+void AKODBaseCharacter::SetPlayerColor(const FLinearColor& Color) {
+  const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+  if(!MaterialInst) return;
+
+  MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
 void AKODBaseCharacter::MoveForward(float Amount) {
   IsMovingForward = Amount > 0.0f;
   if (Amount == 0.0f) return;

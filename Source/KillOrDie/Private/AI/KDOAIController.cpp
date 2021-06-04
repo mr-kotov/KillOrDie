@@ -8,7 +8,8 @@
 
 AKDOAIController::AKDOAIController() {
   KODAIPerceptionComponent = CreateDefaultSubobject<UKODAIPerceptionComponent>("KODPerceptionComponent");
-  SetPerceptionComponent(*KODAIPerceptionComponent);  
+  SetPerceptionComponent(*KODAIPerceptionComponent);
+  bWantsPlayerState = true;
 }
 
 void AKDOAIController::OnPossess(APawn* InPawn) {

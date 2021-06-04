@@ -53,9 +53,7 @@ protected:
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
   UNiagaraSystem* MuzzleFX; 
-  
-  APlayerController* GetPlayerController() const;
-  
+   
   virtual void BeginPlay() override;
   virtual void MakeShot();
   virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;

@@ -25,19 +25,12 @@ void AKODBaseWeapon::BeginPlay() {
 void AKODBaseWeapon::MakeShot() {
 }
 
-APlayerController* AKODBaseWeapon::GetPlayerController() const {
-  const auto Player = Cast<ACharacter>(GetOwner());
-  if(!Player) nullptr;
-
-  return Player->GetController<APlayerController>();
-}
-
 bool AKODBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const {
   const auto KODCharecter = Cast<ACharacter>(GetOwner());
   if(!KODCharecter) return false;
 
   if(KODCharecter->IsPlayerControlled()) {
-    const auto Controller = GetPlayerController();
+    const auto Controller = KODCharecter->GetController<APlayerController>();
     if(!Controller) return false;
     Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
   } else {

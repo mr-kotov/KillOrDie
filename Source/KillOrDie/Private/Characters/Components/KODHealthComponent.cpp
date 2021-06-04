@@ -2,6 +2,8 @@
 
 #include "Characters/Components/KODHealthComponent.h"
 
+
+#include "KODGameModeBase.h"
 #include "Damage/KODFireDamageType.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
@@ -41,6 +43,7 @@ void UKODHealthComponent::OnTakeAnyDamage(AActor* DamagedActor,
   SetHealth(Health - Damage);
   
   if(IsDead()) {
+    Killed(InstigatedBy);
     //если умерли сообщаем всем подписантам что умерли
     OnDeath.Broadcast();
   } else if(AutoHeal && GetWorld()) {
@@ -77,4 +80,16 @@ void UKODHealthComponent::PlayCameraShake() {
   if(!Controller || !Controller->PlayerCameraManager) return;
 
   Controller->PlayerCameraManager->StartCameraShake(CameraShake);
+}
+
+void UKODHealthComponent::Killed(AController* KillerController) {
+  if(!GetWorld()) return;
+  
+  const auto GameMode = Cast<AKODGameModeBase>(GetWorld()->GetAuthGameMode());
+  if(!GameMode) return;
+
+  const auto Player = Cast<APawn>(GetOwner());
+  const auto VictimController = Player ? Player->Controller : nullptr;
+
+  GameMode->Killed(KillerController, VictimController);
 }
