@@ -6,10 +6,8 @@
 #include "GameFramework/Character.h"
 #include "KODBaseCharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent;
+
 class UKODHealthComponent;
-class UTextRenderComponent;
 class UKODWeaponComponent;
 
 UCLASS()
@@ -24,16 +22,7 @@ public:
 
 protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-  UCameraComponent* CameraComponent;
-
-  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-  USpringArmComponent* SpringArmComponent;
-
-  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   UKODHealthComponent* HealthComponent;
-  
-  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
-  UTextRenderComponent* HealthTextComponent;
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
   UKODWeaponComponent* WeaponComponent;
@@ -60,11 +49,8 @@ protected:
 public:
   virtual void Tick(float DeltaTime) override;
 
-  virtual void SetupPlayerInputComponent(
-      class UInputComponent* PlayerInputComponent) override;
-
   UFUNCTION(BlueprintCallable,  Category="Movement")
-  bool IsRunning() const;
+  virtual bool IsRunning() const;
 
   UFUNCTION(BlueprintCallable,  Category="Movement")
   float GetMovementDirection() const;
@@ -72,17 +58,6 @@ public:
   void SetPlayerColor(const FLinearColor& Color);
   
 private:
-  bool WantsToRun = false;
-  bool IsMovingForward = false;
-  
-  void MoveForward(float Amount);
-  void MoveRight(float Amount);
-
-  void LookUp(float Amount);
-  void TurnAround(float Amount);
-  void OnStartRunning();
-  void OnStopRunning();
-
   void OnHealthChanged(float Health, float HealthDelta);
 
   UFUNCTION()

@@ -7,6 +7,7 @@
 #include "Characters/KODBaseCharacter.h"
 #include "Player/KODPlayerController.h"
 #include "AIController.h"
+#include "EngineUtils.h"
 #include "KODPlayerState.h"
 #include "KODUtils.h"
 #include "Components/KODRespawnComponent.h"
@@ -83,8 +84,7 @@ void AKODGameModeBase::GameTimerUpdate() {
       ResetPlayers();
       StartRound();
     }else {
-      UE_LOG(LogKODGameModeBase, Display, TEXT("=============== GAME OVER =============="));
-      LogPlayerInfo();
+      GameOver();
     }
   }
 }
@@ -165,4 +165,16 @@ void AKODGameModeBase::StartRespawn(AController* Controller) {
   if(!RespawnComponent) return;
 
   RespawnComponent->Respawn(GameData.RespawnTime);
+}
+
+void AKODGameModeBase::GameOver() {
+  UE_LOG(LogKODGameModeBase, Display, TEXT("=============== GAME OVER =============="));
+  LogPlayerInfo();
+
+  for (auto Pawn: TActorRange<APawn>(GetWorld())) {
+    if(Pawn) {
+      Pawn->TurnOff();
+      Pawn->DisableInput(nullptr);
+    }
+  }
 }

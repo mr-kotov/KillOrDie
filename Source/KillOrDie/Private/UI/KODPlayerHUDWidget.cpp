@@ -37,9 +37,9 @@ bool UKODPlayerHUDWidget::IsPlayerSpectating() const {
 }
 
 bool UKODPlayerHUDWidget::Initialize() {
-  const auto HealthComponent = KODUtils::GetKODPlayerComponent<UKODHealthComponent>(GetOwningPlayerPawn());
-  if(HealthComponent) {
-    HealthComponent->OnHealthChanged.AddUObject(this, &UKODPlayerHUDWidget::OnHealthChanged);
+  if(GetOwningPlayer()) {
+    GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &UKODPlayerHUDWidget::OnNewPawn);
+    OnNewPawn(GetOwningPlayerPawn());
   }
   return Super::Initialize();
 }
@@ -47,5 +47,12 @@ bool UKODPlayerHUDWidget::Initialize() {
 void UKODPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta) {
   if(HealthDelta < 0.0f) {
     OnTakeDamage();  
+  }
+}
+  
+void UKODPlayerHUDWidget::OnNewPawn(APawn* NewPawn) {
+  const auto HealthComponent = KODUtils::GetKODPlayerComponent<UKODHealthComponent>(NewPawn);
+  if(HealthComponent) {
+    HealthComponent->OnHealthChanged.AddUObject(this, &UKODPlayerHUDWidget::OnHealthChanged);
   }
 }
