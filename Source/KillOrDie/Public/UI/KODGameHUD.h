@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "KODCoreTypes.h"
 #include "KODGameHUD.generated.h"
 
 UCLASS()
@@ -17,9 +18,18 @@ protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
   TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
 
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+  TSubclassOf<UUserWidget> PauseWidgetClass;
+  
   virtual void BeginPlay() override;
   
 private:
-  void DrawCrossHair(); 
+  UPROPERTY()
+  TMap<EKODMatchState, UUserWidget*> GameWidgets;
   
+  UPROPERTY()
+  UUserWidget* CurrentWidget = nullptr;
+  
+  void DrawCrossHair(); 
+  void OnMatchStateChanged(EKODMatchState State);
 };

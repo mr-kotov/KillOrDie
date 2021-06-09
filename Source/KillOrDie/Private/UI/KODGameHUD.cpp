@@ -3,8 +3,11 @@
 #include "UI/KODGameHUD.h"
 
 
+#include "KODGameModeBase.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/Canvas.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogKODGameHUD, All, All);
 
 void AKODGameHUD::DrawHUD() {
   Super::DrawHUD();
@@ -14,9 +17,22 @@ void AKODGameHUD::DrawHUD() {
 void AKODGameHUD::BeginPlay() {
   Super::BeginPlay();
 
-  auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
-  if(PlayerHUDWidget) {
-    PlayerHUDWidget->AddToViewport();
+  GameWidgets.Add(EKODMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+  GameWidgets.Add(EKODMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+
+  for (auto GameWidgetPair: GameWidgets) {
+    const auto GameWidget = GameWidgetPair.Value;
+    if(!GameWidget) continue;
+
+    GameWidget->AddToViewport();
+    GameWidget->SetVisibility(ESlateVisibility::Hidden);
+  }
+  
+  if(GetWorld()) {
+    const auto GameMode = Cast<AKODGameModeBase>(GetWorld()->GetAuthGameMode());
+    if(GameMode) {
+      GameMode->OnMatchStateChanged.AddUObject(this, &AKODGameHUD::OnMatchStateChanged);
+    }
   }
 }
 
@@ -29,4 +45,18 @@ void AKODGameHUD::DrawCrossHair() {
   
   DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LinearColor, LineThickness);
   DrawLine(Center.Min, Center.Max-HalfLineSize, Center.Min, Center.Max+HalfLineSize, LinearColor, LineThickness);
+}
+
+void AKODGameHUD::OnMatchStateChanged(EKODMatchState State) {
+  if(CurrentWidget) {
+    CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+  }
+
+  if(GameWidgets.Contains(State)) {
+    CurrentWidget = GameWidgets[State];
+  }
+  
+  if(CurrentWidget) {
+    CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+  }
 }

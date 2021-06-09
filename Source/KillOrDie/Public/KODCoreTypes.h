@@ -100,3 +100,13 @@ struct FGameData {
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Game", meta = (ClampMin = "3", ClampMax = "20"))
   int32 RespawnTime = 5; //is seconds
 };
+
+UENUM(BlueprintType)
+enum class EKODMatchState: uint8 {
+  WaitingToStart = 0,
+  InProgress,
+  Pause,
+  GameOver
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, EKODMatchState);

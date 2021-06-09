@@ -30,6 +30,8 @@ void AKODGameModeBase::StartPlay() {
   CreateTeamsInfo();
   CurrentRound = 1;
   StartRound();
+
+  SetMatchState(EKODMatchState::InProgress);
 }
 
 UClass* AKODGameModeBase::GetDefaultPawnClassForController_Implementation(
@@ -57,6 +59,23 @@ void AKODGameModeBase::Killed(AController* KillerController,
 
 void AKODGameModeBase::RespawnRequest(AController* Controller) {
   ResetOnePlayer(Controller);
+}
+
+bool AKODGameModeBase::SetPause(APlayerController* PC,
+    FCanUnpause CanUnpauseDelegate) {
+  const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
+  if(PauseSet) {
+    SetMatchState(EKODMatchState::Pause);  
+  }
+  return PauseSet;
+}
+
+bool AKODGameModeBase::ClearPause() {
+  const auto PauseCleared = Super::ClearPause();
+  if(PauseCleared) {
+    SetMatchState(EKODMatchState::InProgress);
+  }
+  return PauseCleared;
 }
 
 void AKODGameModeBase::SpawnBots() {
@@ -177,4 +196,12 @@ void AKODGameModeBase::GameOver() {
       Pawn->DisableInput(nullptr);
     }
   }
+  SetMatchState(EKODMatchState::GameOver);
+}
+
+void AKODGameModeBase::SetMatchState(EKODMatchState State) {
+  if(MatchState == State) return;
+
+  MatchState = State;
+  OnMatchStateChanged.Broadcast(MatchState);
 }
