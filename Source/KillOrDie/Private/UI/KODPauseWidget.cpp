@@ -4,13 +4,12 @@
 #include "Components/Button.h"
 #include "GameFramework/GameModeBase.h"
 
-bool UKODPauseWidget::Initialize() {
-  const auto InitState = Super::Initialize();
-
+void UKODPauseWidget::NativeOnInitialized() {
+  Super::NativeOnInitialized();
+  
   if(ClearPauseButton) {
     ClearPauseButton->OnClicked.AddDynamic(this, &UKODPauseWidget::OnClearPause);
   }
-  return InitState;
 }
 
 void UKODPauseWidget::OnClearPause() {

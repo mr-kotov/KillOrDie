@@ -10,14 +10,12 @@ class UButton;
 
 UCLASS()
 class KILLORDIE_API UKODPauseWidget : public UUserWidget {
-  GENERATED_BODY()
-public:
-  virtual bool Initialize() override;
-  
+  GENERATED_BODY()  
 protected:
   UPROPERTY(meta = (BindWidget))
   UButton* ClearPauseButton;
 
+  virtual void NativeOnInitialized() override;
 private:
   UFUNCTION()
   void OnClearPause();

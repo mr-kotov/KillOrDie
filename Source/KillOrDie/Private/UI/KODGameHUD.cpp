@@ -19,6 +19,7 @@ void AKODGameHUD::BeginPlay() {
 
   GameWidgets.Add(EKODMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
   GameWidgets.Add(EKODMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+  GameWidgets.Add(EKODMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
 
   for (auto GameWidgetPair: GameWidgets) {
     const auto GameWidget = GameWidgetPair.Value;
