@@ -1,5 +1,6 @@
 #pragma once
 #include "KODPlayerState.h"
+#include "KODGameInstance.h"
 
 class KODUtils {
 public:
