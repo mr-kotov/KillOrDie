@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "KODBaseWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "KODCoreTypes.h"
 #include "KODGameOverWidget.generated.h"
@@ -11,7 +13,7 @@ class UVerticalBox;
 class UButton;
 
 UCLASS()
-class KILLORDIE_API UKODGameOverWidget : public UUserWidget {
+class KILLORDIE_API UKODGameOverWidget : public UKODBaseWidget {
   GENERATED_BODY()
 
 protected:

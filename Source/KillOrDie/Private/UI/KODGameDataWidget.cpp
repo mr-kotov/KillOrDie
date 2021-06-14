@@ -4,11 +4,6 @@
 #include "KODGameModeBase.h"
 #include "KODPlayerState.h"
 
-int32 UKODGameDataWidget::GetKillsNum() const {
-  const auto PlayerState = GetKODPlayerState();
-  return PlayerState ? PlayerState->GetKillsNum() : 0;
-}
-
 int32 UKODGameDataWidget::GetCurrentRoundNum() const {
   const auto GameMode = GetKODGameMode();
   return GameMode ? GameMode->GetCurrentRoundNum() : 0;

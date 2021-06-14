@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+
+#include "KODBaseWidget.h"
 #include "KODPauseWidget.generated.h"
 
 class UButton;
 
 UCLASS()
-class KILLORDIE_API UKODPauseWidget : public UUserWidget {
+class KILLORDIE_API UKODPauseWidget : public UKODBaseWidget {
   GENERATED_BODY()  
 protected:
   UPROPERTY(meta = (BindWidget))

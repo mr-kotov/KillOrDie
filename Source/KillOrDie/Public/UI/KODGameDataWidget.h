@@ -12,10 +12,7 @@ class AKODPlayerState;
 UCLASS()
 class KILLORDIE_API UKODGameDataWidget : public UUserWidget {
   GENERATED_BODY()
-public:
-  UFUNCTION(BlueprintCallable, Category = "UI")
-  int32 GetKillsNum() const;
-  
+public:  
   UFUNCTION(BlueprintCallable, Category = "UI")
   int32 GetCurrentRoundNum() const;
   

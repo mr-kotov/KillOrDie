@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "KODBaseWidget.h"
 #include "GameFramework/HUD.h"
 #include "KODCoreTypes.h"
 #include "KODGameHUD.generated.h"
@@ -16,22 +18,22 @@ public:
 
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-  TSubclassOf<UUserWidget> PlayerHUDWidgetClass;
+  TSubclassOf<UKODBaseWidget> PlayerHUDWidgetClass;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-  TSubclassOf<UUserWidget> PauseWidgetClass;
+  TSubclassOf<UKODBaseWidget> PauseWidgetClass;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-  TSubclassOf<UUserWidget> GameOverWidgetClass;
+  TSubclassOf<UKODBaseWidget> GameOverWidgetClass;
   
   virtual void BeginPlay() override;
   
 private:
   UPROPERTY()
-  TMap<EKODMatchState, UUserWidget*> GameWidgets;
+  TMap<EKODMatchState, UKODBaseWidget*> GameWidgets;
   
   UPROPERTY()
-  UUserWidget* CurrentWidget = nullptr;
+  UKODBaseWidget* CurrentWidget = nullptr;
   
   void DrawCrossHair(); 
   void OnMatchStateChanged(EKODMatchState State);

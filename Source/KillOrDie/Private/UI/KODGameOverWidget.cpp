@@ -47,6 +47,7 @@ void UKODGameOverWidget::UpdatePlayersStat() {
     PlayerStatRowWidget->SetDeaths(KODUtils::TextFromInt(PlayerState->GetDeathsNum()));
     PlayerStatRowWidget->SetTeam(KODUtils::TextFromInt(PlayerState->GetTeamID()));
     PlayerStatRowWidget->SetPlayerIndicatorVisibility(Controller->IsPlayerController());
+    PlayerStatRowWidget->SetTeamColor(PlayerState->GetTeamColor());
 
     PlayerStatBox->AddChild(PlayerStatRowWidget);
   }

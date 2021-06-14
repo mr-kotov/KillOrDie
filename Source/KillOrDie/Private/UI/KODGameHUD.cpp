@@ -3,6 +3,7 @@
 #include "UI/KODGameHUD.h"
 
 
+#include "KODBaseWidget.h"
 #include "KODGameModeBase.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/Canvas.h"
@@ -17,9 +18,9 @@ void AKODGameHUD::DrawHUD() {
 void AKODGameHUD::BeginPlay() {
   Super::BeginPlay();
 
-  GameWidgets.Add(EKODMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
-  GameWidgets.Add(EKODMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
-  GameWidgets.Add(EKODMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
+  GameWidgets.Add(EKODMatchState::InProgress, CreateWidget<UKODBaseWidget>(GetWorld(), PlayerHUDWidgetClass));
+  GameWidgets.Add(EKODMatchState::Pause, CreateWidget<UKODBaseWidget>(GetWorld(), PauseWidgetClass));
+  GameWidgets.Add(EKODMatchState::GameOver, CreateWidget<UKODBaseWidget>(GetWorld(), GameOverWidgetClass));
 
   for (auto GameWidgetPair: GameWidgets) {
     const auto GameWidget = GameWidgetPair.Value;
@@ -59,5 +60,6 @@ void AKODGameHUD::OnMatchStateChanged(EKODMatchState State) {
   
   if(CurrentWidget) {
     CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+    CurrentWidget->Show();
   }
 }

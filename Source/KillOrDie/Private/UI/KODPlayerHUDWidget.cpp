@@ -3,6 +3,7 @@
 #include "UI/KODPlayerHUDWidget.h"
 #include "Weapons/Components/KODWeaponComponent.h"
 #include "KODUtils.h"
+#include "Components/ProgressBar.h" 
 #include "Characters/Components/KODHealthComponent.h"
 
 float UKODPlayerHUDWidget::GetHealthPercent() const {
@@ -47,8 +48,13 @@ void UKODPlayerHUDWidget::NativeOnInitialized() {
 
 void UKODPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta) {
   if(HealthDelta < 0.0f) {
-    OnTakeDamage();  
+    OnTakeDamage();
+
+    if(!IsAnimationPlaying(DamageAnimation)) {
+      PlayAnimation(DamageAnimation);
+    }
   }
+  UpdateHealthBar();
 }
   
 void UKODPlayerHUDWidget::OnNewPawn(APawn* NewPawn) {
@@ -56,4 +62,34 @@ void UKODPlayerHUDWidget::OnNewPawn(APawn* NewPawn) {
   if(HealthComponent) {
     HealthComponent->OnHealthChanged.AddUObject(this, &UKODPlayerHUDWidget::OnHealthChanged);
   }
+  UpdateHealthBar();
+}
+
+void UKODPlayerHUDWidget::UpdateHealthBar() {
+  if(HealthProgressBar) {
+    HealthProgressBar->SetFillColorAndOpacity(GetHealthPercent() > PercentColorThreshold ? GoodColor : BadColor);
+  }
+}
+
+int32 UKODPlayerHUDWidget::GetKillsNum() const {
+  const auto Controller = GetOwningPlayer();
+  if(!Controller) return 0;
+
+  const auto PlayerState = Cast<AKODPlayerState>(Controller->PlayerState);
+  return  PlayerState ? PlayerState->GetKillsNum() : 0;
+}
+
+FString UKODPlayerHUDWidget::FormatBullets(int32 BulletsNum) const {
+  const int32 MaxLen = 3;
+  const TCHAR PrefixSymbol = '0';
+
+  auto BulletStr = FString::FromInt(BulletsNum);
+  const auto SymbolsNumToAdd = MaxLen - BulletStr.Len();
+
+  if (SymbolsNumToAdd > 0)
+  {
+    BulletStr = FString::ChrN(SymbolsNumToAdd, PrefixSymbol).Append(BulletStr);
+  }
+
+  return BulletStr;
 }
