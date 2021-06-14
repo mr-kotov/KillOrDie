@@ -25,11 +25,18 @@ void UKODMenuWidget::NativeOnInitialized() {
   InitLevelItems();
 }
 
-void UKODMenuWidget::OnStartGame() {
+void UKODMenuWidget::OnAnimationFinished_Implementation(
+    const UWidgetAnimation* Animation) {
+  if(Animation != HideAnimation) return;
+  
   const auto KODGameInstance = GetKODGameInstance();
   if(!KODGameInstance) return;
   
   UGameplayStatics::OpenLevel(this, KODGameInstance->GetStartupLevel().LevelName);
+}
+
+void UKODMenuWidget::OnStartGame() {
+  PlayAnimation(HideAnimation);
 }
 
 void UKODMenuWidget::OnQuitGame() {
