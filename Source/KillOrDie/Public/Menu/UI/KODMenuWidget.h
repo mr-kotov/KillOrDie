@@ -13,6 +13,7 @@ class UButton;
 class UHorizontalBox;
 class UKODGameInstance;
 class UKODLevelItemWidget;
+class USoundCue;
 
 UCLASS()
 class KILLORDIE_API UKODMenuWidget : public UKODBaseWidget {
@@ -33,6 +34,9 @@ protected:
 
   UPROPERTY(meta = (BindWidgetAnim), Transient)
   UWidgetAnimation* HideAnimation;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+  USoundCue* StartGameSound;
   
   virtual void NativeOnInitialized() override;
   virtual void OnAnimationFinished_Implementation(const UWidgetAnimation* Animation) override;

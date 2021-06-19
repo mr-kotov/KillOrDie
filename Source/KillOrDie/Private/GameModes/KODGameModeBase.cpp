@@ -95,7 +95,7 @@ void AKODGameModeBase::StartRound() {
 }
 
 void AKODGameModeBase::GameTimerUpdate() {
-  UE_LOG(LogKODGameModeBase, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+  //UE_LOG(LogKODGameModeBase, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
   if(--RoundCountDown == 0) {
     GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
     if(CurrentRound + 1 <= GameData.RoundsNum) {

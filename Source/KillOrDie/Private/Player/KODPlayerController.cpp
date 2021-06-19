@@ -26,6 +26,7 @@ void AKODPlayerController::SetupInputComponent() {
   if(!InputComponent) return;
 
   InputComponent->BindAction("PauseGame", IE_Pressed, this, &AKODPlayerController::OnPauseGame);
+  InputComponent->BindAction("Mute", IE_Pressed, this, &AKODPlayerController::OnMuteSound);
 }
 
 void AKODPlayerController::OnPauseGame() {
@@ -42,4 +43,13 @@ void AKODPlayerController::OnMatchStateChanged(EKODMatchState State) {
     SetInputMode(FInputModeUIOnly());
     bShowMouseCursor = true;
   }
+}
+
+void AKODPlayerController::OnMuteSound() {
+  if(!GetWorld()) return;
+
+  const auto KODGameInstace = GetWorld()->GetGameInstance<UKODGameInstance>();
+  if(!KODGameInstace) return;
+
+  KODGameInstace->ToggleVolume();
 }

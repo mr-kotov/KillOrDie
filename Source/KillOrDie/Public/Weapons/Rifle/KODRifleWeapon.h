@@ -9,6 +9,7 @@
 class UKODWeaponFXComponent;
 class UNiagaraComponent;
 class UNiagaraSystem;
+class UAudioComponent;
 
 UCLASS()
 class KILLORDIE_API AKODRifleWeapon : public AKODBaseWeapon {
@@ -51,8 +52,11 @@ private:
   UPROPERTY()
   UNiagaraComponent* MuzzleFXComponent;
 
-  void InitMuzzleFX();
-  void SetMuzzleFXVisibility(bool Visible);
+  UPROPERTY()
+  UAudioComponent* FireAudioComponent;
+  
+  void InitFX();
+  void SetFXActive(bool IsActive);
   void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd);
   AController* GetController() const;
 };

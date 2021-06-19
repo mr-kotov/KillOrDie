@@ -5,6 +5,9 @@
 #include "Components/DecalComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+#include "KODCoreTypes.h"
 
 UKODWeaponFXComponent::UKODWeaponFXComponent() {
   PrimaryComponentTick.bCanEverTick = false;

@@ -45,7 +45,8 @@ public class KillOrDie : ModuleRules
 			"KillOrDie/Public/AI/Decorators",
 			"KillOrDie/Public/Menu",
 			"KillOrDie/Public/Menu/UI",
-			"KillOrDie/Public/Core"
+			"KillOrDie/Public/Core",
+			"KillOrDie/Public/Sound"
 		});
 
 		// Uncomment if you are using Slate UI

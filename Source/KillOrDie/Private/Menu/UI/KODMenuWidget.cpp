@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogUKODMenuWidget, All, All);
 
@@ -37,6 +38,7 @@ void UKODMenuWidget::OnAnimationFinished_Implementation(
 
 void UKODMenuWidget::OnStartGame() {
   PlayAnimation(HideAnimation);
+  UGameplayStatics::PlaySound2D(GetWorld(), StartGameSound);
 }
 
 void UKODMenuWidget::OnQuitGame() {

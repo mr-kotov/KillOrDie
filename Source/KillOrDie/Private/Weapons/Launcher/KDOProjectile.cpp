@@ -73,10 +73,10 @@ void AKDOProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent,
   //DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
   WeaponFXComponent->PlayImpactFX(Hit);
   //SetActorHiddenInGame(true);
-  SetActorEnableCollision(false);
-  EffectTraceComponent->SetVisibility(false);
-  ProjectileMesh->SetVisibility(false);
-  //Destroy();
+  //SetActorEnableCollision(false);
+  //EffectTraceComponent->SetVisibility(false);
+  //ProjectileMesh->SetVisibility(false);
+  Destroy();
 }
 
 AController* AKDOProjectile::GetController() const {

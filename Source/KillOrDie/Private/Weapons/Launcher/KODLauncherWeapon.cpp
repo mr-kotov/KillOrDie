@@ -4,12 +4,15 @@
 #include "Weapons/Launcher/KODLauncherWeapon.h"
 #include "KDOProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 void AKODLauncherWeapon::StartFire() {
   MakeShot();
 }
 
 void AKODLauncherWeapon::MakeShot() {
+  Super::MakeShot();
+  
   if(!GetWorld() || IsAmmoEmpty()) return;
 
   FVector TraceStart, TraceEnd;
@@ -32,5 +35,7 @@ void AKODLauncherWeapon::MakeShot() {
   }
   DecreaseAmmo();
   SpawnMuzzleFX();
+  //UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+  UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSound, GetActorLocation());
   //set projectile params
 }

@@ -9,6 +9,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/KODWeaponComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseCharacter, All, All);
 
@@ -87,6 +89,8 @@ void AKODBaseCharacter::OnDeath() {
 
   GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
   GetMesh()->SetSimulatePhysics(true);
+
+  UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 }
 
 void AKODBaseCharacter::OnHealthChanged(float Health, float HealthDelta) {

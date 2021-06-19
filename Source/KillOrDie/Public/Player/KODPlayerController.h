@@ -24,4 +24,5 @@ protected:
 private:
   void OnPauseGame();
   void OnMatchStateChanged(EKODMatchState State);
+  void OnMuteSound();
 };

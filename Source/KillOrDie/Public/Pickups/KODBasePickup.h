@@ -9,6 +9,7 @@
 #include "KODBasePickup.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class KILLORDIE_API AKODBasePickup : public AActor {
@@ -24,6 +25,9 @@ protected:
 
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
   float RespawnTime = 5.0f;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+  USoundCue* TakenSound;
   
   virtual void BeginPlay() override;
   virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;

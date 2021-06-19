@@ -10,6 +10,7 @@
 class USkeletalMeshComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
+class USoundCue;
 
 UCLASS()
 class KILLORDIE_API AKODBaseWeapon : public AActor {
@@ -52,7 +53,13 @@ protected:
   FWeaponUIData UIData;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="VFX")
-  UNiagaraSystem* MuzzleFX; 
+  UNiagaraSystem* MuzzleFX;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+  USoundCue* FireSound;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+  USoundCue* NoAmmoSound;
    
   virtual void BeginPlay() override;
   virtual void MakeShot();
