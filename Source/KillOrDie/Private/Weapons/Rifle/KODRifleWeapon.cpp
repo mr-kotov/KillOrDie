@@ -31,6 +31,18 @@ void AKODRifleWeapon::StopFire() {
   SetFXActive(false);
 }
 
+void AKODRifleWeapon::Zoom(bool Enabled) {
+  const auto Controller = Cast<APlayerController>(GetController());
+  if(!Controller || !Controller->PlayerCameraManager) return;
+
+  if(Enabled) {
+    DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
+  }
+  
+  //const TInterval<float> FOV(50.0f,90.0f);
+  Controller->PlayerCameraManager->SetFOV(Enabled ? FOVZoomAngle : DefaultCameraFOV);
+}
+
 void AKODRifleWeapon::MakeShot() {
   Super::MakeShot();
   if(!GetWorld() || IsAmmoEmpty()) {
@@ -94,7 +106,6 @@ void AKODRifleWeapon::SetFXActive(bool IsActive) {
     MuzzleFXComponent->SetPaused(!IsActive);
     MuzzleFXComponent->SetVisibility(IsActive, true);
   }
-
   if(FireAudioComponent) {
     IsActive ? FireAudioComponent->Play() : FireAudioComponent->Stop();
   }

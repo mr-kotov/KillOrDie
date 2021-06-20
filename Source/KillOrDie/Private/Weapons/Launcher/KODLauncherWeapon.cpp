@@ -35,7 +35,7 @@ void AKODLauncherWeapon::MakeShot() {
   }
   DecreaseAmmo();
   SpawnMuzzleFX();
-  //UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
-  UGameplayStatics::SpawnSoundAtLocation(GetWorld(), FireSound, GetActorLocation());
+  UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+  //UE_LOG(LogTemp, Error, TEXT("location: %s"), *GetOwner()->GetActorLocation().ToString())
   //set projectile params
 }

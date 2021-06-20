@@ -82,6 +82,7 @@ void UKODWeaponComponent::EquipWeapon(int32 WeaponIndex) {
 
   if(CurrentWeapon) {
     CurrentWeapon->StopFire();
+    CurrentWeapon->Zoom(false);
     AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorSocketName);
   }
   
@@ -190,6 +191,12 @@ bool UKODWeaponComponent::NeedAmmo(TSubclassOf<AKODBaseWeapon> WeaponType) {
     }
   }
   return false;
+}
+
+void UKODWeaponComponent::Zoom(bool Enabled) {
+  if(CurrentWeapon) {
+    CurrentWeapon->Zoom(Enabled);
+  }
 }
 
 void UKODWeaponComponent::OnEmptyClip(AKODBaseWeapon* AmmoEmptyWeapon) {

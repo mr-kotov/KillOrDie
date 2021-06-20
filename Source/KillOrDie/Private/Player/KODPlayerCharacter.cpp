@@ -52,6 +52,10 @@ void AKODPlayerCharacter::SetupPlayerInputComponent(
   PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &UKODWeaponComponent::StopFire);
   PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, WeaponComponent, &UKODWeaponComponent::NextWeapon);
   PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &UKODWeaponComponent::Reload);
+
+  DECLARE_DELEGATE_OneParam(FZoomInputSignature, bool);
+  PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Pressed, WeaponComponent, &UKODWeaponComponent::Zoom, true);
+  PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Released, WeaponComponent, &UKODWeaponComponent::Zoom, false);
 }
 
 bool AKODPlayerCharacter::IsRunning() const {

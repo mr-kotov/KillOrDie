@@ -29,7 +29,8 @@ public:
   bool TryToAddAmmo(TSubclassOf<AKODBaseWeapon> WeaponType, int32 ClipsAmount);
 
   bool NeedAmmo(TSubclassOf<AKODBaseWeapon> WeaponType);
-  
+
+  void Zoom(bool Enabled);
 protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Weapon")
   TArray<FWeaponData> WeaponData;
