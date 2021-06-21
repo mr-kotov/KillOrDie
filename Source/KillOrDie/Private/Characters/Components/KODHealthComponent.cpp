@@ -39,34 +39,41 @@ void UKODHealthComponent::BeginPlay() {
   }
 }
 
-void UKODHealthComponent::OnTakeAnyDamage(AActor* DamagedActor,
-                                          float Damage,
-                                          const UDamageType* DamageType,
-                                          AController* InstigatedBy,
-                                          AActor* DamageCauser) {
+void UKODHealthComponent::OnTakeAnyDamage(
+    AActor* DamagedActor,
+    float Damage,
+    const UDamageType* DamageType,
+    AController* InstigatedBy,
+    AActor* DamageCauser) {
 }
 
-void UKODHealthComponent::OnTakePointDamage(AActor* DamagedActor, float Damage,
-                                            AController* InstigatedBy,
-                                            FVector HitLocation,
-                                            UPrimitiveComponent* FHitComponent,
-                                            FName BoneName,
-                                            FVector ShotFromDirection,
-                                            const UDamageType* DamageType,
-                                            AActor* DamageCauser) {
+void UKODHealthComponent::OnTakePointDamage(
+    AActor* DamagedActor,
+    float Damage,
+    AController* InstigatedBy,
+    FVector HitLocation,
+    UPrimitiveComponent* FHitComponent,
+    FName BoneName,
+    FVector ShotFromDirection,
+    const UDamageType* DamageType,
+    AActor* DamageCauser) {
   const auto FinalDamage = Damage * GetPointDamageModifier(
                                DamagedActor, BoneName);
-  UE_LOG(LogHealthComponent, Display,
-         TEXT("On point damage: %f, final damage: %f, bone: %s"), Damage,
-         FinalDamage, *BoneName.ToString());
+  UE_LOG(
+      LogHealthComponent, Display,
+      TEXT("On point damage: %f, final damage: %f, bone: %s"), Damage,
+      FinalDamage, *BoneName.ToString());
   ApplyDamage(FinalDamage, InstigatedBy);
 }
 
-void UKODHealthComponent::OnTakeRadialDamage(AActor* DamagedActor, float Damage,
-                                             const UDamageType* DamageType,
-                                             FVector Origin, FHitResult HitInfo,
-                                             AController* InstigatedBy,
-                                             AActor* DamageCauser) {
+void UKODHealthComponent::OnTakeRadialDamage(
+    AActor* DamagedActor,
+    float Damage,
+    const UDamageType* DamageType,
+    FVector Origin,
+    FHitResult HitInfo,
+    AController* InstigatedBy,
+    AActor* DamageCauser) {
   UE_LOG(LogHealthComponent, Display, TEXT("On radial damage: %f"), Damage);
   ApplyDamage(Damage, InstigatedBy);
 }
@@ -124,17 +131,19 @@ void UKODHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy) {
     //если умерли сообщаем всем подписантам что умерли
     OnDeath.Broadcast();
   } else if (AutoHeal && GetWorld()) {
-    GetWorld()->GetTimerManager().SetTimer(HealTimerHandle, this,
-                                           &UKODHealthComponent::OnTimerRecoveryHealth,
-                                           HealUpdateFrequency, true,
-                                           HealDelay);
+    GetWorld()->GetTimerManager().SetTimer(
+        HealTimerHandle, this,
+        &UKODHealthComponent::OnTimerRecoveryHealth,
+        HealUpdateFrequency, true,
+        HealDelay);
   }
   PlayCameraShake();
   ReportDamageEvent(Damage, InstigatedBy);
 }
 
-float UKODHealthComponent::GetPointDamageModifier(AActor* DamageActor,
-                                                  const FName& BoneName) {
+float UKODHealthComponent::GetPointDamageModifier(
+    AActor* DamageActor,
+    const FName& BoneName) {
   const auto Character = Cast<ACharacter>(DamageActor);
   if (!Character || !Character->GetMesh() || !Character->GetMesh()->
       GetBodyInstance(BoneName))
@@ -147,18 +156,19 @@ float UKODHealthComponent::GetPointDamageModifier(AActor* DamageActor,
   return DamageModifiers[PhysMaterial];
 }
 
-void UKODHealthComponent::ReportDamageEvent(float Damage,
-                                            AController* InstigateBy) {
+void UKODHealthComponent::ReportDamageEvent(
+    float Damage,
+    AController* InstigateBy) {
   if (!GetWorld() ||             //
       !InstigateBy->GetPawn() || //
       !GetOwner())               //
     return;
 
-  UAISense_Damage::ReportDamageEvent(GetWorld(),             //
-                                     GetOwner(),             //
-                                     InstigateBy->GetPawn(), //
-                                     Damage,                 //
-                                     InstigateBy->GetPawn()->GetActorLocation(),
-                                     //
-                                     GetOwner()->GetActorLocation());
+  UAISense_Damage::ReportDamageEvent(
+      GetWorld(),                                 //
+      GetOwner(),                                 //
+      InstigateBy->GetPawn(),                     //
+      Damage,                                     //
+      InstigateBy->GetPawn()->GetActorLocation(), //
+      GetOwner()->GetActorLocation());
 }
