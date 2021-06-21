@@ -88,7 +88,11 @@ GetTraceData(FVector& TraceStart, FVector& TraceEnd) const {
 void AKODRifleWeapon::MakeDamage(const FHitResult& HitResult) {
   const auto DamgeActor = HitResult.GetActor();
   if(!DamgeActor) return;
-  DamgeActor->TakeDamage(DamageAmount, FDamageEvent(), GetController(), this);
+
+  FPointDamageEvent PointDamageEvent;
+  PointDamageEvent.HitInfo = HitResult;
+  
+  DamgeActor->TakeDamage(DamageAmount, PointDamageEvent, GetController(), this);
 }
 
 void AKODRifleWeapon::InitFX() {
