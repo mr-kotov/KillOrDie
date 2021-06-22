@@ -5,6 +5,7 @@
 #include "KODGameModeBase.h"
 #include "Damage/KODFireDamageType.h"
 #include "Perception/AISense_Damage.h"
+#include "Player/KDOAIController.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -45,6 +46,9 @@ void UKODHealthComponent::OnTakeAnyDamage(
     const UDamageType* DamageType,
     AController* InstigatedBy,
     AActor* DamageCauser) {
+  if(!InstigatedBy) {
+    ApplyDamage(Damage, InstigatedBy); 
+  }
 }
 
 void UKODHealthComponent::OnTakePointDamage(
@@ -160,10 +164,17 @@ void UKODHealthComponent::ReportDamageEvent(
     float Damage,
     AController* InstigateBy) {
   if (!GetWorld() ||             //
+      !InstigateBy || //
       !InstigateBy->GetPawn() || //
       !GetOwner())               //
     return;
 
+  const auto Player = Cast<APawn>(GetOwner());
+  if (!Player) return;
+
+  const auto AIController = Player->GetController<AKDOAIController>();
+  if(!AIController) return;
+  
   UAISense_Damage::ReportDamageEvent(
       GetWorld(),                                 //
       GetOwner(),                                 //

@@ -99,6 +99,8 @@ void AKODBaseCharacter::OnHealthChanged(float Health, float HealthDelta) {
 
 void AKODBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
   const auto FallVelocityZ = -GetVelocity().Z;
+
+  UE_LOG(LogBaseCharacter, Warning, TEXT("Velocity %f, LandedDamageVelocity: %f"), FallVelocityZ, LandedDamageVelocity.X);
   if (FallVelocityZ < LandedDamageVelocity.X) return;
   const auto FineDamage = FMath::GetMappedRangeValueClamped(
       LandedDamageVelocity, LandedDamage, FallVelocityZ);
