@@ -30,6 +30,9 @@ protected:
   float BulletSpread = 1.5f;
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+  float BulletSpreadZoom = 0.8f;
+  
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
   float DamageAmount = 10.0f;
   
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -52,6 +55,7 @@ protected:
 
 private:
   FTimerHandle ShotTimerHandle;
+  bool IsZoom = false;
 
   UPROPERTY()
   UNiagaraComponent* MuzzleFXComponent;

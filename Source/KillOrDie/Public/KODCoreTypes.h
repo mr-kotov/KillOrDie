@@ -1,4 +1,5 @@
 #pragma once
+#include "KODPlayerStart.h"
 #include "KODCoreTypes.generated.h"
 //Weapon
 class AKODBaseWeapon;

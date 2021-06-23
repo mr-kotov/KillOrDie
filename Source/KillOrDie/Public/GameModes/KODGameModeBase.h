@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "KODCoreTypes.h"
+#include "KODPlayerStart.h"
 #include "GameFramework/GameModeBase.h"
 #include "KODUtils.h"
 #include "KODGameModeBase.generated.h"
@@ -21,6 +22,7 @@ public:
   
   virtual void StartPlay() override;
   virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+  //virtual void FindPlayerStart_Implementation();
 
   void Killed(AController* KillerController, AController* VictimController);
   FGameData GetGameData() const {return  GameData;}
@@ -39,7 +41,8 @@ protected:
 
   virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate = FCanUnpause()) override;
   virtual bool ClearPause() override;
-
+  virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+  
 private:
   EKODMatchState MatchState = EKODMatchState::WaitingToStart; 
   int32 CurrentRound = 1;

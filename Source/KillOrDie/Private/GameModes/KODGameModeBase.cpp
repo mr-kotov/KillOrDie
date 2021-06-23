@@ -8,6 +8,7 @@
 #include "Player/KODPlayerController.h"
 #include "AIController.h"
 #include "EngineUtils.h"
+#include "KODPlayerStart.h"
 #include "KODPlayerState.h"
 #include "KODUtils.h"
 #include "Components/KODRespawnComponent.h"
@@ -43,7 +44,7 @@ UClass* AKODGameModeBase::GetDefaultPawnClassForController_Implementation(
 }
 
 void AKODGameModeBase::Killed(AController* KillerController,
-    AController* VictimController) {
+                              AController* VictimController) {
   const auto KillerPlayerState = KillerController ? Cast<AKODPlayerState>(KillerController->PlayerState) : nullptr;
   const auto VictimPlayerState = VictimController ? Cast<AKODPlayerState>(VictimController->PlayerState) : nullptr;
 
@@ -78,6 +79,26 @@ bool AKODGameModeBase::ClearPause() {
   return PauseCleared;
 }
 
+AActor* AKODGameModeBase::
+ChoosePlayerStart_Implementation(AController* Player) {  
+  const auto PlayerState = Cast<AKODPlayerState>(Player->PlayerState);
+  if(PlayerState && PlayerState->GetPlayerStart())
+    return PlayerState->GetPlayerStart();    
+
+  for (auto PlayerStart: TActorRange<AKODPlayerStart>(GetWorld())) {
+    if(PlayerStart && PlayerStart->GetIsFree()){
+      PlayerStart->ToTake();
+
+      if(PlayerState) {
+        PlayerState->SetPlayerStart(PlayerStart);
+        PlayerState->SetTeamID(PlayerStart->GetTeamID());
+      }
+      return PlayerStart;  
+    }
+  }
+  return Super::ChoosePlayerStart_Implementation(Player);
+}
+
 void AKODGameModeBase::SpawnBots() {
   if(!GetWorld()) return;
 
@@ -85,6 +106,7 @@ void AKODGameModeBase::SpawnBots() {
     FActorSpawnParameters SpawnInfo;
     SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
     const auto KODAIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo);
+    
     RestartPlayer(KODAIController);
   }
 }
@@ -127,7 +149,6 @@ void AKODGameModeBase::ResetOnePlayer(AController* Controller) {
 void AKODGameModeBase::CreateTeamsInfo() {
   if(!GetWorld()) return;
 
-  int32 TeamID = 1;
   for (auto It = GetWorld()->GetControllerIterator(); It; ++It) {
     const auto Controller = It->Get();
     if(!Controller) continue;
@@ -135,12 +156,9 @@ void AKODGameModeBase::CreateTeamsInfo() {
     const auto PlayerState = Cast<AKODPlayerState>(Controller->PlayerState);
     if(!PlayerState) continue;
 
-    PlayerState->SetTeamID(TeamID);
-    PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
+    PlayerState->SetTeamColor(DetermineColorByTeamID(PlayerState->GetTeamID()));
     PlayerState->SetPlayerName(Controller->IsPlayerController()? "Player" : "Bot");
     SetPlayerColor(Controller);
-
-    TeamID = TeamID == 1 ? 2 : 1;
   }
 }
 

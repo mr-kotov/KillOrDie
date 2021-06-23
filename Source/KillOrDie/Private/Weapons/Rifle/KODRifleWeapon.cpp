@@ -38,7 +38,7 @@ void AKODRifleWeapon::Zoom(bool Enabled) {
   if(Enabled) {
     DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
   }
-  
+  IsZoom = Enabled;
   //const TInterval<float> FOV(50.0f,90.0f);
   Controller->PlayerCameraManager->SetFOV(Enabled ? FOVZoomAngle : DefaultCameraFOV);
 }
@@ -78,7 +78,7 @@ GetTraceData(FVector& TraceStart, FVector& TraceEnd) const {
   /**Получаем положенее в мире, начало траектории*/
   TraceStart = ViewLocation;//SocketTransform.GetLocation();
   /**Получаем направление стрельбы*/
-  const auto HalfRad = FMath::DegreesToRadians(BulletSpread);
+  const auto HalfRad = FMath::DegreesToRadians(IsZoom ? BulletSpreadZoom : BulletSpread);
   const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad);//SocketTransform.GetRotation().GetForwardVector();
   /**Получаем последнюю точку для формирования траектории стрельбы*/
   TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;

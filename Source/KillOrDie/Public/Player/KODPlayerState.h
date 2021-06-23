@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "KODPlayerStart.h"
 #include "GameFramework/PlayerState.h"
 #include "KODPlayerState.generated.h"
 
@@ -22,6 +24,9 @@ public:
   void AddDeath(){++DeathsNum;}
   int32 GetDeathsNum() const {return  DeathsNum;}
 
+  AKODPlayerStart* GetPlayerStart(){return PlayerStart;}
+  void SetPlayerStart(AKODPlayerStart* PlayerStartVal){PlayerStart = PlayerStartVal;}
+  
   void LogInfo();
 private:
   int32 TeamID;
@@ -29,4 +34,5 @@ private:
 
   int32 KillsNum = 0;
   int32 DeathsNum = 0;
+  AKODPlayerStart* PlayerStart; 
 };
