@@ -14,8 +14,7 @@ void AKODPlayerController::BeginPlay() {
   Super::BeginPlay();
 
   if(GetWorld()) {
-    const auto GameMode = Cast<AKODGameModeBase>(GetWorld()->GetAuthGameMode());
-    if(GameMode) {
+    if(const auto GameMode = Cast<AKODGameModeBase>(GetWorld()->GetAuthGameMode())) {
       GameMode->OnMatchStateChanged.AddUObject(this, &AKODPlayerController::OnMatchStateChanged);
     }
   }

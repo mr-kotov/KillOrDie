@@ -64,4 +64,5 @@ private:
   void StartRespawn(AController* Controller);
   void GameOver();
   void SetMatchState(EKODMatchState State);
+  void StopAllFire();
 };

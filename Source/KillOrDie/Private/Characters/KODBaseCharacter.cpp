@@ -49,6 +49,18 @@ void AKODBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
 }
 
+void AKODBaseCharacter::TurnOff() {
+  WeaponComponent->StopFire();
+  WeaponComponent->Zoom(false);
+  Super::TurnOff();
+}
+
+void AKODBaseCharacter::Reset() {
+  WeaponComponent->StopFire();
+  WeaponComponent->Zoom(false);
+  Super::Reset();
+}
+
 bool AKODBaseCharacter::IsRunning() const {
   return false;
 }

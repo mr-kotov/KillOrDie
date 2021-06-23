@@ -1,8 +1,6 @@
 // Kill or Die
 
 #include "GameModes/KODGameModeBase.h"
-
-
 #include "KODGameHUD.h"
 #include "Characters/KODBaseCharacter.h"
 #include "Player/KODPlayerController.h"
@@ -11,6 +9,7 @@
 #include "KODPlayerStart.h"
 #include "KODPlayerState.h"
 #include "KODUtils.h"
+#include "KODWeaponComponent.h"
 #include "Components/KODRespawnComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogKODGameModeBase, All, All);
@@ -66,6 +65,7 @@ bool AKODGameModeBase::SetPause(APlayerController* PC,
     FCanUnpause CanUnpauseDelegate) {
   const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate);
   if(PauseSet) {
+    StopAllFire();
     SetMatchState(EKODMatchState::Pause);  
   }
   return PauseSet;
@@ -223,4 +223,14 @@ void AKODGameModeBase::SetMatchState(EKODMatchState State) {
 
   MatchState = State;
   OnMatchStateChanged.Broadcast(MatchState);
+}
+
+void AKODGameModeBase::StopAllFire() {
+  for (auto Pawn: TActorRange<APawn>(GetWorld())) {
+    const auto WeaponComponent = KODUtils::GetKODPlayerComponent<UKODWeaponComponent>(Pawn);
+    if(!WeaponComponent) continue;
+
+    WeaponComponent->StopFire();
+    WeaponComponent->Zoom(false);
+  }
 }
